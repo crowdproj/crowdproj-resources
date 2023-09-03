@@ -20,7 +20,7 @@ openApiGenerate {
     apiPackage.set("$openapiGroup.api")
     modelPackage.set("$openapiGroup.models")
     invokerPackage.set("$openapiGroup.invoker")
-    inputSpec.set("$projectDir/spec-v1.yaml")
+    inputSpec.set("$projectDir/specs-resources-v1.yaml")
 
     /**
      * Настройка дополнительных параметров из документации по генератору
@@ -44,7 +44,7 @@ openApiGenerate {
 
 
 val archives: Configuration by configurations.getting
-val specFile = layout.buildDirectory.file("$projectDir/spec-v1.yaml")
+val specFile = layout.buildDirectory.file("$projectDir/spec-resources-v1.yaml")
 val specArtifact = artifacts.add(archives.name, specFile.get().asFile) {
     type = "yaml"
     classifier = "openapi"

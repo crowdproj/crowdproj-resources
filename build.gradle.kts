@@ -1,15 +1,10 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
-    id("io.codearte.nexus-staging")
-    id("com.crowdproj.generator") apply false
+    kotlin("jvm") apply false
 }
 
-nexusStaging {
-    serverUrl = "https://s01.oss.sonatype.org/service/local/"
-    packageGroup = "com.crowdproj"
-//    stagingProfileId = "yourStagingProfileId" //when not defined will be got from server using "packageGroup"
-}
-
-group = "com.crowdproj"
+group = "ru.otus.otuskotlin.marketplace"
 version = "0.1.0"
 
 repositories {
@@ -17,11 +12,13 @@ repositories {
 }
 
 subprojects {
-    this.group = group
-    this.version = version
-
+    group = rootProject.group
+    version = rootProject.version
     repositories {
         mavenCentral()
-        mavenLocal()
+    }
+
+    tasks.withType<KotlinCompile> {
+        kotlinOptions.jvmTarget = "17"
     }
 }

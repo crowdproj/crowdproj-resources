@@ -1,0 +1,421 @@
+openapi: 3.0.4
+info:
+  title: "Marketplace ${VERSION_APP}"
+  description: This is a place where sellers and buyers meat each other
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/v1
+tags:
+  - name: resource
+    description: Ресурс (время / товар и т.д.)
+paths:
+  /resource/create:
+    post:
+      tags:
+        - resource
+      summary: Create resource
+      operationId: resourceCreate
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourceCreateRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceCreateResponse'
+  /resource/read:
+    post:
+      tags:
+        - resource
+      summary: Read resource
+      operationId: resourceRead
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourceReadRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceReadResponse'
+  /resource/update:
+    post:
+      tags:
+        - resource
+      summary: Update resource
+      operationId: resourceUpdate
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourceUpdateRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceUpdateResponse'
+  /resource/delete:
+    post:
+      tags:
+        - resource
+      summary: Delete resource
+      operationId: resourceDelete
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourceDeleteRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceDeleteResponse'
+  /resource/search:
+    post:
+      tags:
+        - resource
+      summary: Search resource
+      operationId: resourceSearch
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourceSearchRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceSearchResponse'
+
+components:
+  schemas:
+
+    IRequest:
+      type: object
+      description: Базовый интерфейс для всех запросов
+      properties:
+        requestType:
+          type: string
+          description: Поле-дескриминатор для вычисления типа запроса
+          example: create
+        requestId:
+          type: string
+          description: Идентификатор запроса для отладки
+      discriminator:
+        propertyName: requestType
+        mapping:
+          create: '#/components/schemas/ResourceCreateRequest'
+          read:   '#/components/schemas/ResourceReadRequest'
+          update: '#/components/schemas/ResourceUpdateRequest'
+          delete: '#/components/schemas/ResourceDeleteRequest'
+          search: '#/components/schemas/ResourceSearchRequest'
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        group:
+          type: string
+        field:
+          type: string
+        message:
+          type: string
+
+    ResponseResult:
+      type: string
+      enum:
+        - success
+        - error
+
+    IResponse:
+      type: object
+      description: Базовый интерфейс для всех ответов
+      properties:
+        responseType:
+          type: string
+          description: Поле-дескриминатор для вычисления типа запроса
+          example: create
+        requestId:
+          type: string
+          description: Идентификатор запроса для отладки
+        result:
+          $ref: '#/components/schemas/ResponseResult'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+
+      discriminator:
+        propertyName: responseType
+        mapping:
+          create: '#/components/schemas/ResourceCreateResponse'
+          read:   '#/components/schemas/ResourceReadResponse'
+          update: '#/components/schemas/ResourceUpdateResponse'
+          delete: '#/components/schemas/ResourceDeleteResponse'
+          search: '#/components/schemas/ResourceSearchResponse'
+          init: '#/components/schemas/ResourceInitResponse'
+
+    ResourceLock:
+      type: string
+      description: "An optimistic lock"
+
+    ResourceId:
+      type: string
+      description: Resource ID
+
+    OtherResourceId:
+      type: string
+      description: link to the Resource from other microservices
+
+    ScheduleId:
+      type: string
+      description: link to the Resource Schedule Template microservice
+
+    UserId:
+      type: string
+      description: A unique identifier user
+
+    BaseResource:
+      type: object
+      description: "Object describes resources"
+      properties:
+        resourceId:
+          $ref: '#/components/schemas/OtherResourceId'
+        scheduleId:
+          $ref: '#/components/schemas/ScheduleId'
+        ownerId:
+          $ref: '#/components/schemas/UserId'
+        deleted:
+          type: string
+          description: флаг удаления
+        visible:
+          $ref: '#/components/schemas/ResourceVisibility'
+
+    ResourceVisibility:
+      type: string
+      description: 'Тип видимости ресурса'
+      enum:
+        - ownerOnly
+        - registeredOnly
+        - public
+
+    ResourceInitResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+
+    ResourceCreateObject:
+      allOf:
+        - $ref: '#/components/schemas/BaseResource'
+
+    ResourceCreateRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/ResourceRequestDebug'
+        - type: object
+          properties:
+            resource:
+              $ref: '#/components/schemas/ResourceCreateObject'
+
+    ResourceReadObject:
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/ResourceId'
+
+    ResourceReadRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/ResourceRequestDebug'
+        - type: object
+          properties:
+            resource:
+              $ref: '#/components/schemas/ResourceReadObject'
+
+    ResourceUpdateObject:
+      allOf:
+        - $ref: '#/components/schemas/BaseResource'
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/ResourceId'
+            lock:
+              $ref: '#/components/schemas/ResourceLock'
+
+    ResourceUpdateRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/ResourceRequestDebug'
+        - type: object
+          properties:
+            resource:
+              $ref: '#/components/schemas/ResourceUpdateObject'
+
+    ResourceDeleteObject:
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/ResourceId'
+            lock:
+              $ref: '#/components/schemas/ResourceLock'
+
+    ResourceDeleteRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/ResourceRequestDebug'
+        - type: object
+          properties:
+            resource:
+              $ref: '#/components/schemas/ResourceDeleteObject'
+
+    ResourceSearchFilter:
+      type: object
+      description: Набор фильтров для поиска
+      properties:
+        searchString:
+          type: string
+          description: Поисковая строка
+
+    ResourceSearchRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/ResourceRequestDebug'
+        - type: object
+          properties:
+            resourceFilter:
+              $ref: '#/components/schemas/ResourceSearchFilter'
+
+    ResourceResponseObject:
+      allOf:
+        - $ref: '#/components/schemas/BaseResource'
+        - type: object
+          description: Объект, который возвращается в ответе бэкенда
+          properties:
+            id:
+              $ref: '#/components/schemas/ResourceId'
+            ownerId:
+              $ref: '#/components/schemas/UserId'
+            lock:
+              $ref: '#/components/schemas/ResourceLock'
+            permissions:
+              type: array
+              uniqueItems: true
+              items:
+                $ref: '#/components/schemas/ResourcePermissions'
+
+    ResourcePermissions:
+      type: string
+      description: Доступы для клиента для операций над объявлением
+      enum:
+        - read
+        - update
+        - delete
+        - makeVisiblePublic
+        - makeVisibleOwn
+        - makeVisibleGroup
+
+    ResourceResponseSingle:
+      allOf:
+        - type: object
+          description: Ответ с одним объектом объявления
+          properties:
+            resource:
+              $ref: '#/components/schemas/ResourceResponseObject'
+
+    ResourceResponseMulti:
+      allOf:
+        - type: object
+          description: Список найденных объектов
+          properties:
+            resources:
+              type: array
+              items:
+                $ref: '#/components/schemas/ResourceResponseObject'
+
+    ResourceCreateResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/ResourceResponseSingle'
+
+    ResourceReadResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/ResourceResponseSingle'
+
+    ResourceUpdateResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/ResourceResponseSingle'
+
+    ResourceDeleteResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/ResourceResponseSingle'
+
+    ResourceSearchResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/ResourceResponseMulti'
+
+    # STUBS ======================
+    ResourceRequestDebugMode:
+      type: string
+      enum:
+        - prod
+        - test
+        - stub
+
+    ResourceRequestDebug:
+      type: object
+      properties:
+        debug:
+          $ref: '#/components/schemas/ResourceDebug'
+
+    ResourceDebug:
+      type: object
+      properties:
+        mode:
+          $ref: '#/components/schemas/ResourceRequestDebugMode'
+        stub:
+          $ref: '#/components/schemas/ResourceRequestDebugStubs'
+
+    ResourceRequestDebugStubs:
+      type: string
+      description: Перечисления всех стабов
+      enum:
+        - success
+        - notFound
+        - badId
+        - badTitle
+        - badDescription
+        - badVisibility
+        - cannotDelete
+        - badSearchString
