@@ -1,4 +1,4 @@
-package ru.otus.otuskotlin.marketplace.common.models
+package com.crowdproj.resources.common.models
 
 data class ResourcesError(
     val code: String = "",

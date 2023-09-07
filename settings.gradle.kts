@@ -1,23 +1,24 @@
 rootProject.name = "crowdproj-resources"
 
 pluginManagement {
-    val kotlinVersion: String by settings
-    val kotestVersion: String by settings
-    val openapiVersion: String by settings
-
     plugins {
-        kotlin("jvm") version kotlinVersion
-        kotlin("multiplatform") version kotlinVersion
-        kotlin("plugin.serialization") version kotlinVersion apply false
+        val kotlinVersion: String by settings
+        val ktorPluginVersion: String by settings
+        val codeGeneratorVersion: String by settings
+        val bmuschkoVersion: String by settings
 
-        id("io.kotest.multiplatform") version kotestVersion apply false
-        id("org.openapi.generator") version openapiVersion apply false
+        kotlin("jvm") version kotlinVersion
+        kotlin("multiplatform") version kotlinVersion apply false
+        kotlin("plugin.serialization") version kotlinVersion apply false
+        id("io.ktor.plugin") version ktorPluginVersion apply false
+
+        id("com.crowdproj.generator") version codeGeneratorVersion apply false
+
+        id("com.bmuschko.docker-remote-api") version bmuschkoVersion apply false
     }
 }
-val runTests: String by settings
-val shouldTest = runTests.toBoolean()
 
-include("specs")
+//include("specs")
 include("resources-api-v1")
-include("resources-common")
-include("resources-api-v1-mappers")
+//include("resources-common")
+//include("resources-api-v1-mappers")

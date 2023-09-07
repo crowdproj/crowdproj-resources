@@ -1,10 +1,10 @@
-package ru.otus.otuskotlin.marketplace.mappers.v1
+package com.crowdproj.resources.mappers.v1
 
-import ru.otus.otuskotlin.marketplace.common.ResourcesContext
-import ru.otus.otuskotlin.marketplace.api.v1.models.*
-import ru.otus.otuskotlin.marketplace.common.models.*
-import ru.otus.otuskotlin.marketplace.common.stubs.ResourcesStubs
-import ru.otus.otuskotlin.marketplace.mappers.v1.exceptions.UnknownRequestClass
+import com.crowdproj.resources.common.ResourcesContext
+import com.crowdproj.resources.api.v1.models.*
+import com.crowdproj.resources.common.models.*
+import com.crowdproj.resources.common.stubs.ResourcesStubs
+import com.crowdproj.resources.mappers.v1.exceptions.UnknownRequestClass
 
 fun ResourcesContext.fromTransport(request: IRequest) = when (request) {
     is ResourceCreateRequest -> fromTransport(request)

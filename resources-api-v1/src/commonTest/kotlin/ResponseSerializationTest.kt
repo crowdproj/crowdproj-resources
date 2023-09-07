@@ -1,6 +1,6 @@
-package ru.otus.otuskotlin.marketplace.api.v1
+package com.crowdproj.resources.api.v1
 
-import ru.otus.otuskotlin.marketplace.api.v1.models.*
+import com.crowdproj.resources.api.v1.models.*
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals

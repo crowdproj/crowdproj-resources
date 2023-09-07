@@ -1,10 +1,10 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     kotlin("jvm") apply false
+    kotlin("multiplatform") apply false
+    id("org.ysb33r.terraform") version "1.0.0"
 }
 
-group = "ru.otus.otuskotlin.marketplace"
+group = "com.crowdproj.resources"
 version = "0.1.0"
 
 repositories {
@@ -12,13 +12,17 @@ repositories {
 }
 
 subprojects {
-    group = rootProject.group
-    version = rootProject.version
+    this.group = rootProject.group
+    this.version = rootProject.version
+
     repositories {
         mavenCentral()
     }
+}
 
-    tasks.withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "17"
+tasks {
+    @Suppress("UNUSED_VARIABLE")
+    val deploy: Task by creating {
+        dependsOn("build")
     }
 }

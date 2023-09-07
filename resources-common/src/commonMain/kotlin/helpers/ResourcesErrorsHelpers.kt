@@ -1,7 +1,7 @@
-package ru.otus.otuskotlin.marketplace.common.helpers
+package com.crowdproj.resources.common.helpers
 
-import ru.otus.otuskotlin.marketplace.common.ResourcesContext
-import ru.otus.otuskotlin.marketplace.common.models.ResourcesError
+import com.crowdproj.resources.common.ResourcesContext
+import com.crowdproj.resources.common.models.ResourcesError
 
 fun Throwable.asMkplError(
     code: String = "unknown",
