@@ -20,5 +20,5 @@ pluginManagement {
 
 //include("specs")
 include("resources-api-v1")
-//include("resources-common")
-//include("resources-api-v1-mappers")
+include("resources-common")
+include("resources-api-v1-mappers")

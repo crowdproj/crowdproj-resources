@@ -14,8 +14,8 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-common"))
 
-                implementation(project(":crowdproj-ad-api-v1"))
-                implementation(project(":crowdproj-ad-common"))
+                implementation(project(":resources-api-v1"))
+                implementation(project(":resources-common"))
             }
         }
 
