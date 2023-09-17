@@ -10,7 +10,7 @@ kotlin {
         @Suppress("UNUSED_VARIABLE")
         val commonMain by getting {
 
-            kotlin.srcDirs("$buildDir/generate-resources/main/src/commonMain/kotlin")
+            kotlin.srcDirs("${layout.buildDirectory.get()}/generate-resources/main/src/commonMain/kotlin")
             dependencies {
                 implementation(kotlin("stdlib-common"))
 
