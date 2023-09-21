@@ -3,101 +3,102 @@ package com.crowdproj.resources.mappers.v1
 import com.crowdproj.resources.api.v1.models.*
 import com.crowdproj.resources.common.ResourcesContext
 import com.crowdproj.resources.common.models.*
-import com.crowdproj.resources.mappers.v1.exceptions.UnknownResourcesCommand
 
-fun ResourcesContext.toTransportAd(): IResponse = when (val cmd = command) {
-    ResourcesCommand.CREATE -> toTransportCreate()
-    ResourcesCommand.READ -> toTransportRead()
-    ResourcesCommand.UPDATE -> toTransportUpdate()
-    ResourcesCommand.DELETE -> toTransportDelete()
-    ResourcesCommand.SEARCH -> toTransportSearch()
-    ResourcesCommand.NONE -> throw UnknownResourcesCommand(cmd)
+
+fun ResourcesContext.toApi(): IResponseResource? = when (command) {
+    ResourcesCommand.NONE -> null
+    ResourcesCommand.CREATE -> toApiCreate()
+    ResourcesCommand.READ -> toApiRead()
+    ResourcesCommand.UPDATE -> toApiUpdate()
+    ResourcesCommand.DELETE -> toApiDelete()
+    ResourcesCommand.SEARCH -> toApiSearch()
 }
 
-fun ResourcesContext.toTransportCreate() = ResourceCreateResponse(
-    requestId = this.requestId.asString().takeIf { it.isNotBlank() },
-    result = if (state == ResourcesState.RUNNING) ResponseResult.SUCCESS else ResponseResult.ERROR,
-    errors = errors.toTransportErrors(),
-    resource = resourceResponse.toTransportResource()
+fun ResourcesContext.toApiCreate() = ResourceCreateResponse(
+    requestId = toApiRequestId(),
+    result = toApiResult(),
+    errors = toApiErrors(),
+    resource = toApiResources(this.resourceResponse),
 )
 
-fun ResourcesContext.toTransportRead() = ResourceReadResponse(
-    requestId = this.requestId.asString().takeIf { it.isNotBlank() },
-    result = if (state == ResourcesState.RUNNING) ResponseResult.SUCCESS else ResponseResult.ERROR,
-    errors = errors.toTransportErrors(),
-    resource = resourceResponse.toTransportResource()
+fun ResourcesContext.toApiRead() = ResourceReadResponse(
+    requestId = toApiRequestId(),
+    result = toApiResult(),
+    errors = toApiErrors(),
+    resource = toApiResources(this.resourceResponse),
 )
 
-fun ResourcesContext.toTransportUpdate() = ResourceUpdateResponse(
-    requestId = this.requestId.asString().takeIf { it.isNotBlank() },
-    result = if (state == ResourcesState.RUNNING) ResponseResult.SUCCESS else ResponseResult.ERROR,
-    errors = errors.toTransportErrors(),
-    resource = resourceResponse.toTransportResource()
+fun ResourcesContext.toApiUpdate() = ResourceUpdateResponse(
+    requestId = toApiRequestId(),
+    result = toApiResult(),
+    errors = toApiErrors(),
+    resource = toApiResources(this.resourceResponse),
 )
 
-fun ResourcesContext.toTransportDelete() = ResourceDeleteResponse(
-    requestId = this.requestId.asString().takeIf { it.isNotBlank() },
-    result = if (state == ResourcesState.RUNNING) ResponseResult.SUCCESS else ResponseResult.ERROR,
-    errors = errors.toTransportErrors(),
-    resource = resourceResponse.toTransportResource()
+fun ResourcesContext.toApiDelete() = ResourceDeleteResponse(
+    requestId = toApiRequestId(),
+    result = toApiResult(),
+    errors = toApiErrors(),
+    resource = toApiResources(this.resourceResponse),
 )
 
-fun ResourcesContext.toTransportSearch() = ResourceSearchResponse(
-    requestId = this.requestId.asString().takeIf { it.isNotBlank() },
-    result = if (state == ResourcesState.RUNNING) ResponseResult.SUCCESS else ResponseResult.ERROR,
-    errors = errors.toTransportErrors(),
-    resources = resourcesResponse.toTransportResource()
+fun ResourcesContext.toApiSearch() = ResourceSearchResponse(
+    requestId = toApiRequestId(),
+    result = toApiResult(),
+    errors = toApiErrors(),
+    resources = resourcesResponse.mapNotNull { toApiResources(it) }.takeIf { it.isNotEmpty() },
 )
 
-fun List<Resources>.toTransportResource(): List<ResourceResponseObject>? = this
-    .map { it.toTransportResource() }
-    .toList()
+private fun toApiResources(resource: Resources): ResourceResponseObject? = if (resource.isEmpty()) {
+    null
+} else {
+    ResourceResponseObject(
+        id = resource.id.takeIf { it != ResourcesId.NONE }?.asString(),
+        resourceId = resource.resourcesId.takeIf { it != OtherResourcesId.NONE }?.asString(),
+        scheduleId = resource.scheduleId.takeIf { it != ScheduleId.NONE }?.asString(),
+        ownerId = resource.ownerId.takeIf { it != ResourcesUserId.NONE }?.asString(),
+        visible = resource.visible.toApiResourcesVisibility(),
+        permissions = resource.permissionsClient.toApiPermissions(),
+    )
+}
+
+private fun Set<ResourcesPermissionClient>.toApiPermissions(): Set<ResourcePermissions>? = this
+    .map { it.toApiPermission() }
     .takeIf { it.isNotEmpty() }
+    ?.toSet()
 
-fun ResourcesContext.toTransportInit() = ResourceInitResponse(
-    requestId = this.requestId.asString().takeIf { it.isNotBlank() },
-    result = if (errors.isEmpty()) ResponseResult.SUCCESS else ResponseResult.ERROR,
-    errors = errors.toTransportErrors(),
-)
-
-private fun Resources.toTransportResource(): ResourceResponseObject = ResourceResponseObject(
-    id = id.takeIf { it != ResourcesId.NONE }?.asString(),
-    resourceId = resourcesId.takeIf { it != OtherResourcesId.NONE }?.asString(),
-    scheduleId = scheduleId.takeIf { it != ScheduleId.NONE }?.asString(),
-    ownerId = ownerId.takeIf { it != ResourcesUserId.NONE }?.asString(),
-    visible = visible.toTransportAd(),
-    permissions = permissionsClient.toTransportAd(),
-)
-
-private fun Set<ResourcesPermissionClient>.toTransportAd(): Set<ResourcePermissions>? = this
-    .map { it.toTransportAd() }
-    .toSet()
-    .takeIf { it.isNotEmpty() }
-
-private fun ResourcesPermissionClient.toTransportAd() = when (this) {
+private fun ResourcesPermissionClient.toApiPermission(): ResourcePermissions = when(this) {
     ResourcesPermissionClient.READ -> ResourcePermissions.READ
     ResourcesPermissionClient.UPDATE -> ResourcePermissions.UPDATE
-    ResourcesPermissionClient.MAKE_VISIBLE_OWNER -> ResourcePermissions.MAKE_VISIBLE_OWN
-    ResourcesPermissionClient.MAKE_VISIBLE_GROUP -> ResourcePermissions.MAKE_VISIBLE_GROUP
-    ResourcesPermissionClient.MAKE_VISIBLE_PUBLIC -> ResourcePermissions.MAKE_VISIBLE_PUBLIC
     ResourcesPermissionClient.DELETE -> ResourcePermissions.DELETE
+    ResourcesPermissionClient.MAKE_VISIBLE_PUBLIC -> ResourcePermissions.MAKE_VISIBLE_PUBLIC
+    ResourcesPermissionClient.MAKE_VISIBLE_GROUP -> ResourcePermissions.MAKE_VISIBLE_GROUP
+    ResourcesPermissionClient.MAKE_VISIBLE_OWNER -> ResourcePermissions.MAKE_VISIBLE_OWN
 }
 
-private fun ResourcesVisible.toTransportAd(): ResourceVisibility? = when (this) {
-    ResourcesVisible.VISIBLE_PUBLIC -> ResourceVisibility.PUBLIC
-    ResourcesVisible.VISIBLE_TO_GROUP -> ResourceVisibility.REGISTERED_ONLY
-    ResourcesVisible.VISIBLE_TO_OWNER -> ResourceVisibility.OWNER_ONLY
+private fun ResourcesVisible.toApiResourcesVisibility(): ResourceVisibility? = when(this) {
     ResourcesVisible.NONE -> null
+    ResourcesVisible.VISIBLE_TO_OWNER -> ResourceVisibility.OWNER_ONLY
+    ResourcesVisible.VISIBLE_TO_GROUP -> ResourceVisibility.REGISTERED_ONLY
+    ResourcesVisible.VISIBLE_PUBLIC -> ResourceVisibility.PUBLIC
 }
 
-private fun List<ResourcesError>.toTransportErrors(): List<Error>? = this
-    .map { it.toTransportAd() }
-    .toList()
-    .takeIf { it.isNotEmpty() }
-
-private fun ResourcesError.toTransportAd() = Error(
-    code = code.takeIf { it.isNotBlank() },
-    group = group.takeIf { it.isNotBlank() },
-    field = field.takeIf { it.isNotBlank() },
-    message = message.takeIf { it.isNotBlank() },
+private fun ResourcesContext.toApiErrors(): List<Error>? = errors.map { it.toApiError() }.takeIf { it.isNotEmpty() }
+private fun ResourcesError.toApiError() = Error(
+    code = this.code.trString(),
+    group = this.group.trString(),
+    field = this.field.trString(),
+    title = this.message.trString(),
+    description = null,
 )
+
+private fun String.trString(): String? = takeIf { it.isNotBlank() }
+
+private fun ResourcesContext.toApiResult(): ResponseResult? = when (this.state) {
+    ResourcesState.NONE -> null
+    ResourcesState.RUNNING -> ResponseResult.SUCCESS
+    ResourcesState.FAILING -> ResponseResult.ERROR
+    ResourcesState.FINISHING -> ResponseResult.SUCCESS
+}
+
+private fun ResourcesContext.toApiRequestId(): String? = this.requestId.takeIf { it != ResourcesRequestId.NONE }?.asString()

@@ -19,6 +19,11 @@ pluginManagement {
 }
 
 //include("specs")
-include("resources-api-v1")
 include("resources-common")
+include("resources-api-v1")
 include("resources-api-v1-mappers")
+include("resources-stubs")
+include("resources-biz")
+include("resources-ktor")
+include("resources-log")
+include("resources-swagger")

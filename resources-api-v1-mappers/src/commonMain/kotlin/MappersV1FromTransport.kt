@@ -4,29 +4,93 @@ import com.crowdproj.resources.common.ResourcesContext
 import com.crowdproj.resources.api.v1.models.*
 import com.crowdproj.resources.common.models.*
 import com.crowdproj.resources.common.stubs.ResourcesStubs
-import com.crowdproj.resources.mappers.v1.exceptions.UnknownRequestClass
 
-fun ResourcesContext.fromTransport(request: IRequest) = when (request) {
-    is ResourceCreateRequest -> fromTransport(request)
-    is ResourceReadRequest -> fromTransport(request)
-    is ResourceUpdateRequest -> fromTransport(request)
-    is ResourceDeleteRequest -> fromTransport(request)
-    is ResourceSearchRequest -> fromTransport(request)
-    else -> throw UnknownRequestClass(request.javaClass)
+fun ResourcesContext.fromApi(request: IRequestResource) = when (request) {
+    is ResourceCreateRequest -> fromApi(request)
+    is ResourceReadRequest -> fromApi(request)
+    is ResourceUpdateRequest -> fromApi(request)
+    is ResourceDeleteRequest -> fromApi(request)
+    is ResourceSearchRequest -> fromApi(request)
 }
 
-private fun String?.toAdId() = this?.let { ResourcesId(it) } ?: ResourcesId.NONE
-private fun String?.toAdWithId() = Resources(id = this.toAdId())
-private fun IRequest?.requestId() = this?.requestId?.let { ResourcesRequestId(it) } ?: ResourcesRequestId.NONE
+fun ResourcesContext.fromApi(request: ResourceCreateRequest) {
+    resolveOperation(request)
+    fromApiResourceCreate(request.resource)
+    fromApiDebug(request)
+}
 
-private fun ResourceDebug?.transportToWorkMode(): ResourcesWorkMode = when (this?.mode) {
+fun ResourcesContext.fromApi(request: ResourceReadRequest) {
+    resolveOperation(request)
+    fromApiResourceRead(request.resource)
+    fromApiDebug(request)
+}
+
+fun ResourcesContext.fromApi(request: ResourceUpdateRequest) {
+    resolveOperation(request)
+    fromApiResourceUpdate(request.resource)
+    fromApiDebug(request)
+}
+
+fun ResourcesContext.fromApi(request: ResourceDeleteRequest) {
+    resolveOperation(request)
+    fromApiResourceDelete(request.resource)
+    fromApiDebug(request)
+}
+
+fun ResourcesContext.fromApi(request: ResourceSearchRequest) {
+    resolveOperation(request)
+    fromApiResourceSearch(request.resourceFilter)
+    fromApiDebug(request)
+}
+
+
+private fun ResourcesContext.fromApiResourceCreate(resource: ResourceCreateObject?) {
+    this.resourceRequest = resource?.let {
+        Resources(
+            resourcesId = it.resourceId.fromApiOtherResourcesId(),
+            scheduleId = it.scheduleId.fromApiScheduleId(),
+            visible = it.visible.fromApiVisible(),
+        )
+    } ?: Resources()
+}
+
+private fun ResourcesContext.fromApiResourceRead(resource: ResourceReadObject?) {
+    this.resourceRequest.id = resource?.id?.toResourceId() ?: ResourcesId.NONE
+}
+
+private fun ResourcesContext.fromApiResourceUpdate(resource: ResourceUpdateObject?) {
+    this.resourceRequest = resource?.let {
+        Resources(
+            id = it.id.toResourceId(),
+            resourcesId = it.resourceId.fromApiOtherResourcesId(),
+            scheduleId = it.scheduleId.fromApiScheduleId(),
+            visible = it.visible.fromApiVisible(),
+        )
+    } ?: Resources()
+}
+
+private fun ResourcesContext.fromApiResourceDelete(resource: ResourceDeleteObject?) {
+    this.resourceRequest.id = resource?.id?.toResourceId() ?: ResourcesId.NONE
+}
+
+private fun ResourcesContext.fromApiResourceSearch(filter: ResourceSearchFilter?) {
+    this.resourceFilterRequest = ResourcesFilter(
+        searchString = filter?.searchString ?: "",
+    )
+}
+
+private fun String?.toResourceId() = this?.let { ResourcesId(it) } ?: ResourcesId.NONE
+private fun String?.fromApiOtherResourcesId() = this?.let { OtherResourcesId(it) } ?: OtherResourcesId.NONE
+private fun String?.fromApiScheduleId() = this?.let { ScheduleId(it) } ?: ScheduleId.NONE
+
+private fun ResourceRequestDebugMode?.fromApiWorkMode(): ResourcesWorkMode = when (this) {
     ResourceRequestDebugMode.PROD -> ResourcesWorkMode.PROD
     ResourceRequestDebugMode.TEST -> ResourcesWorkMode.TEST
     ResourceRequestDebugMode.STUB -> ResourcesWorkMode.STUB
-    null -> ResourcesWorkMode.PROD
+    null -> ResourcesWorkMode.NONE
 }
 
-private fun ResourceDebug?.transportToStubCase(): ResourcesStubs = when (this?.stub) {
+private fun ResourceRequestDebugStubs?.fromApiStubCase(): ResourcesStubs = when (this) {
     ResourceRequestDebugStubs.SUCCESS -> ResourcesStubs.SUCCESS
     ResourceRequestDebugStubs.NOT_FOUND -> ResourcesStubs.NOT_FOUND
     ResourceRequestDebugStubs.BAD_ID -> ResourcesStubs.BAD_ID
@@ -38,67 +102,25 @@ private fun ResourceDebug?.transportToStubCase(): ResourcesStubs = when (this?.s
     null -> ResourcesStubs.NONE
 }
 
-fun ResourcesContext.fromTransport(request: ResourceCreateRequest) {
-    command = ResourcesCommand.CREATE
-    requestId = request.requestId()
-    resourceRequest = request.resource?.toInternal() ?: Resources()
-    workMode = request.debug.transportToWorkMode()
-    stubCase = request.debug.transportToStubCase()
+private fun ResourcesContext.fromApiDebug(request: IRequestResource?) {
+    this.workMode = request?.debug?.mode?.fromApiWorkMode() ?: ResourcesWorkMode.NONE
+    this.stubCase = request?.debug?.stub?.fromApiStubCase() ?: ResourcesStubs.NONE
 }
 
-fun ResourcesContext.fromTransport(request: ResourceReadRequest) {
-    command = ResourcesCommand.READ
-    requestId = request.requestId()
-    resourceRequest = request.resource?.id.toAdWithId()
-    workMode = request.debug.transportToWorkMode()
-    stubCase = request.debug.transportToStubCase()
-}
-
-fun ResourcesContext.fromTransport(request: ResourceUpdateRequest) {
-    command = ResourcesCommand.UPDATE
-    requestId = request.requestId()
-    resourceRequest = request.resource?.toInternal() ?: Resources()
-    workMode = request.debug.transportToWorkMode()
-    stubCase = request.debug.transportToStubCase()
-}
-
-fun ResourcesContext.fromTransport(request: ResourceDeleteRequest) {
-    command = ResourcesCommand.DELETE
-    requestId = request.requestId()
-    resourceRequest = request.resource?.id.toAdWithId()
-    workMode = request.debug.transportToWorkMode()
-    stubCase = request.debug.transportToStubCase()
-}
-
-fun ResourcesContext.fromTransport(request: ResourceSearchRequest) {
-    command = ResourcesCommand.SEARCH
-    requestId = request.requestId()
-    resourceFilterRequest = request.resourceFilter.toInternal()
-    workMode = request.debug.transportToWorkMode()
-    stubCase = request.debug.transportToStubCase()
-}
-
-private fun ResourceSearchFilter?.toInternal(): ResourcesFilter = ResourcesFilter(
-    searchString = this?.searchString ?: ""
-)
-private fun String?.toOtherId() = this?.let { OtherResourcesId(it) } ?: OtherResourcesId.NONE
-private fun String?.toScheduleId() = this?.let { ScheduleId(it) } ?: ScheduleId.NONE
-private fun ResourceCreateObject.toInternal(): Resources = Resources(
-    resourcesId = this.resourceId.toOtherId(),
-    scheduleId = this.scheduleId.toScheduleId(),
-    visible = this.visible.fromTransport(),
-)
-
-private fun ResourceUpdateObject.toInternal(): Resources = Resources(
-    id = this.id.toAdId(),
-    resourcesId = this.resourceId.toOtherId(),
-    scheduleId = this.scheduleId.toScheduleId(),
-    visible = this.visible.fromTransport(),
-)
-
-private fun ResourceVisibility?.fromTransport(): ResourcesVisible = when (this) {
-    ResourceVisibility.PUBLIC -> ResourcesVisible.VISIBLE_PUBLIC
+private fun ResourceVisibility?.fromApiVisible(): ResourcesVisible = when (this) {
     ResourceVisibility.OWNER_ONLY -> ResourcesVisible.VISIBLE_TO_OWNER
     ResourceVisibility.REGISTERED_ONLY -> ResourcesVisible.VISIBLE_TO_GROUP
+    ResourceVisibility.PUBLIC -> ResourcesVisible.VISIBLE_PUBLIC
     null -> ResourcesVisible.NONE
+}
+
+private fun ResourcesContext.resolveOperation(request: IRequestResource) {
+    this.command = when (request) {
+        is ResourceCreateRequest -> ResourcesCommand.CREATE
+        is ResourceReadRequest -> ResourcesCommand.READ
+        is ResourceUpdateRequest -> ResourcesCommand.UPDATE
+        is ResourceDeleteRequest -> ResourcesCommand.DELETE
+        is ResourceSearchRequest -> ResourcesCommand.SEARCH
+
+    }
 }
