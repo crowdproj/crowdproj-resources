@@ -1,27 +1,28 @@
 plugins {
-    id("io.codearte.nexus-staging")
-    id("com.crowdproj.generator") apply false
+    kotlin("jvm") apply false
+    kotlin("multiplatform") apply false
+    id("org.ysb33r.terraform") version "1.0.0"
 }
 
-nexusStaging {
-    serverUrl = "https://s01.oss.sonatype.org/service/local/"
-    packageGroup = "com.crowdproj"
-//    stagingProfileId = "yourStagingProfileId" //when not defined will be got from server using "packageGroup"
-}
-
-group = "com.crowdproj"
-version = "0.1.0"
+group = "com.crowdproj.resources"
+version = System.getenv("PROJECT_VERSION") ?: "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
 }
 
 subprojects {
-    this.group = group
-    this.version = version
+    this.group = rootProject.group
+    this.version = rootProject.version
 
     repositories {
         mavenCentral()
-        mavenLocal()
+    }
+}
+
+tasks {
+    @Suppress("UNUSED_VARIABLE")
+    val deploy: Task by creating {
+        dependsOn("build")
     }
 }

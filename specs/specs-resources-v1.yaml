@@ -1,0 +1,405 @@
+openapi: 3.0.3
+info:
+  title: "Marketplace ${VERSION_APP}"
+  description: Resources for Marketplace
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/resources
+tags:
+  - name: resource
+    description: Ресурс (время / товар и т.д.)
+paths:
+  /v1/create:
+    post:
+      tags:
+        - resource
+      summary: Create resource
+      operationId: resourceCreate
+      parameters:
+        - in: header
+          name: X-Request-ID
+          schema:
+            $ref: './base.yaml#/components/schemas/RequestId'
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourceCreateRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceCreateResponse'
+  /v1/read:
+    post:
+      tags:
+        - resource
+      summary: Read resource
+      operationId: resourceRead
+      parameters:
+        - in: header
+          name: X-Request-ID
+          schema:
+            $ref: './base.yaml#/components/schemas/RequestId'
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourceReadRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceReadResponse'
+  /v1/update:
+    post:
+      tags:
+        - resource
+      summary: Update resource
+      operationId: resourceUpdate
+      parameters:
+        - in: header
+          name: X-Request-ID
+          schema:
+            $ref: './base.yaml#/components/schemas/RequestId'
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourceUpdateRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceUpdateResponse'
+  /v1/delete:
+    post:
+      tags:
+        - resource
+      summary: Delete resource
+      operationId: resourceDelete
+      parameters:
+        - in: header
+          name: X-Request-ID
+          schema:
+            $ref: './base.yaml#/components/schemas/RequestId'
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourceDeleteRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceDeleteResponse'
+  /v1/search:
+    post:
+      tags:
+        - resource
+      summary: Search resource
+      operationId: resourceSearch
+      parameters:
+        - in: header
+          name: X-Request-ID
+          schema:
+            $ref: './base.yaml#/components/schemas/RequestId'
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResourceSearchRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceSearchResponse'
+
+components:
+  schemas:
+
+    IRequestResource:
+      allOf:
+        - $ref: './base.yaml#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/ResourceRequestDebug'
+        - type: object
+          discriminator:
+            propertyName: requestType
+            mapping:
+              create: '#/components/schemas/ResourceCreateRequest'
+              read: '#/components/schemas/ResourceReadRequest'
+              update: '#/components/schemas/ResourceUpdateRequest'
+              delete: '#/components/schemas/ResourceDeleteRequest'
+              search: '#/components/schemas/ResourceSearchRequest'
+    Error:
+      $ref: './base.yaml#/components/schemas/Error'
+
+    IResponseResource:
+      allOf:
+        - $ref: './base.yaml#/components/schemas/IResponse'
+        - type: object
+          discriminator:
+            propertyName: responseType
+            mapping:
+              create: '#/components/schemas/ResourceCreateResponse'
+              read: '#/components/schemas/ResourceReadResponse'
+              update: '#/components/schemas/ResourceUpdateResponse'
+              delete: '#/components/schemas/ResourceDeleteResponse'
+              search: '#/components/schemas/ResourceSearchResponse'
+              init: '#/components/schemas/ResourceInitResponse'
+
+    ResourceLock:
+      type: string
+      description: "An optimistic lock"
+
+    ResourceId:
+      type: string
+      description: Resource ID
+
+    OtherResourceId:
+      type: string
+      description: link to the Resource from other microservices
+
+    ScheduleId:
+      type: string
+      description: link to the Resource Schedule Template microservice
+
+    UserId:
+      type: string
+      description: A unique identifier user
+
+    BaseResource:
+      type: object
+      description: "Object describes resources"
+      properties:
+        resourceId:
+          $ref: '#/components/schemas/OtherResourceId'
+        scheduleId:
+          $ref: '#/components/schemas/ScheduleId'
+        ownerId:
+          $ref: '#/components/schemas/UserId'
+        deleted:
+          type: string
+          description: флаг удаления
+        visible:
+          $ref: '#/components/schemas/ResourceVisibility'
+
+    ResourceVisibility:
+      type: string
+      description: 'Тип видимости ресурса'
+      enum:
+        - ownerOnly
+        - registeredOnly
+        - public
+
+    ResourceInitResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponseResource'
+
+    ResourceCreateObject:
+      allOf:
+        - $ref: '#/components/schemas/BaseResource'
+
+    ResourceCreateRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequestResource'
+        - type: object
+          properties:
+            resource:
+              $ref: '#/components/schemas/ResourceCreateObject'
+
+    ResourceReadObject:
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/ResourceId'
+
+    ResourceReadRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequestResource'
+        - type: object
+          properties:
+            resource:
+              $ref: '#/components/schemas/ResourceReadObject'
+
+    ResourceUpdateObject:
+      allOf:
+        - $ref: '#/components/schemas/BaseResource'
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/ResourceId'
+            lock:
+              $ref: '#/components/schemas/ResourceLock'
+
+    ResourceUpdateRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequestResource'
+        - type: object
+          properties:
+            resource:
+              $ref: '#/components/schemas/ResourceUpdateObject'
+
+    ResourceDeleteObject:
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/ResourceId'
+            lock:
+              $ref: '#/components/schemas/ResourceLock'
+
+    ResourceDeleteRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequestResource'
+        - type: object
+          properties:
+            resource:
+              $ref: '#/components/schemas/ResourceDeleteObject'
+
+    ResourceSearchFilter:
+      type: object
+      description: Набор фильтров для поиска
+      properties:
+        searchString:
+          type: string
+          description: Поисковая строка
+
+    ResourceSearchRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequestResource'
+        - type: object
+          properties:
+            resourceFilter:
+              $ref: '#/components/schemas/ResourceSearchFilter'
+
+    ResourceResponseObject:
+      allOf:
+        - $ref: '#/components/schemas/BaseResource'
+        - type: object
+          description: Объект, который возвращается в ответе бэкенда
+          properties:
+            id:
+              $ref: '#/components/schemas/ResourceId'
+            ownerId:
+              $ref: '#/components/schemas/UserId'
+            lock:
+              $ref: '#/components/schemas/ResourceLock'
+            permissions:
+              type: array
+              uniqueItems: true
+              items:
+                $ref: '#/components/schemas/ResourcePermissions'
+
+    ResourcePermissions:
+      type: string
+      description: Доступы для клиента для операций над объявлением
+      enum:
+        - read
+        - update
+        - delete
+        - makeVisiblePublic
+        - makeVisibleOwn
+        - makeVisibleGroup
+
+    ResourceResponseSingle:
+      allOf:
+        - type: object
+          description: Ответ с одним объектом объявления
+          properties:
+            resource:
+              $ref: '#/components/schemas/ResourceResponseObject'
+
+    ResourceResponseMulti:
+      allOf:
+        - type: object
+          description: Список найденных объектов
+          properties:
+            resources:
+              type: array
+              items:
+                $ref: '#/components/schemas/ResourceResponseObject'
+
+    ResourceCreateResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponseResource'
+        - $ref: '#/components/schemas/ResourceResponseSingle'
+
+    ResourceReadResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponseResource'
+        - $ref: '#/components/schemas/ResourceResponseSingle'
+
+    ResourceUpdateResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponseResource'
+        - $ref: '#/components/schemas/ResourceResponseSingle'
+
+    ResourceDeleteResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponseResource'
+        - $ref: '#/components/schemas/ResourceResponseSingle'
+
+    ResourceSearchResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponseResource'
+        - $ref: '#/components/schemas/ResourceResponseMulti'
+
+    # STUBS ======================
+    ResourceRequestDebugMode:
+      type: string
+      enum:
+        - prod
+        - test
+        - stub
+
+    ResourceRequestDebug:
+      type: object
+      properties:
+        debug:
+          $ref: '#/components/schemas/ResourceDebug'
+
+    ResourceDebug:
+      type: object
+      properties:
+        mode:
+          $ref: '#/components/schemas/ResourceRequestDebugMode'
+        stub:
+          $ref: '#/components/schemas/ResourceRequestDebugStubs'
+
+    ResourceRequestDebugStubs:
+      type: string
+      description: Перечисления всех стабов
+      enum:
+        - success
+        - notFound
+        - badId
+        - badTitle
+        - badDescription
+        - badVisibility
+        - cannotDelete
+        - badSearchString
