@@ -28,10 +28,11 @@ pluginManagement {
 }
 
 
-include("specs")
+//include("specs")
 include("resources-api-v1")
 include("resources-common")
 include("resources-api-v1-mappers")
 include("resources-biz")
 include("resources-stubs")
 include("resources-ktor")
+include("resources-kafka")
