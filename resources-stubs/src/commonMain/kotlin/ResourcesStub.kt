@@ -8,22 +8,21 @@ object ResourcesStub {
 
     fun prepareResult(block: Resources.() -> Unit): Resources = get().apply(block)
 
-    fun prepareSearchList(id: String, otherId: String, scheduleId: String) = listOf(
-        resoucesDemand("d-666-01", otherId, scheduleId),
-        resoucesDemand("d-666-02", otherId, scheduleId),
-        resoucesDemand("d-666-03", otherId, scheduleId),
-        resoucesDemand("d-666-04", otherId, scheduleId),
-        resoucesDemand("d-666-05", otherId, scheduleId),
-        resoucesDemand("d-666-06", otherId, scheduleId),
+    fun prepareSearchList(filter: String) = listOf(
+        resoucesDemand("d-666-01", filter),
+        resoucesDemand("d-666-02", filter),
+        resoucesDemand("d-666-03", filter),
+        resoucesDemand("d-666-04", filter),
+        resoucesDemand("d-666-05", filter),
+        resoucesDemand("d-666-06", filter),
     )
 
-    private fun resoucesDemand(id: String, otherId: String, scheduleId: String) =
-        resource(AD_DEMAND_BOLT1, id = id, otherId = otherId, scheduleId = scheduleId)
+    private fun resoucesDemand(id: String, filter: String) =
+        resource(AD_DEMAND_BOLT1, id = id, filter = filter)
 
-    private fun resource(base: Resources, id: String, otherId: String, scheduleId: String) = base.copy(
+    private fun resource(base: Resources, id: String, filter: String) = base.copy(
         id = ResourcesId(id),
-        resourcesId = OtherResourcesId(otherId),
-        scheduleId = ScheduleId(scheduleId),
+        resourcesId = OtherResourcesId("$filter $id"),
+        scheduleId = ScheduleId("$filter $id"),
     )
-
 }

@@ -5,9 +5,10 @@ enum class ResourcesStubs {
     SUCCESS,
     NOT_FOUND,
     BAD_ID,
-    BAD_TITLE,
-    BAD_DESCRIPTION,
+    BAD_OTHER_ID,
+    BAD_SCHEDULE_ID,
     BAD_VISIBILITY,
     CANNOT_DELETE,
     BAD_SEARCH_STRING,
+    DB_ERROR,
 }

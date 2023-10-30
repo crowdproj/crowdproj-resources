@@ -8,6 +8,7 @@ data class ResourcesContext(
     var command: ResourcesCommand = ResourcesCommand.NONE,
     var state: ResourcesState = ResourcesState.NONE,
     val errors: MutableList<ResourcesError> = mutableListOf(),
+    var settings: ResourcesCorSettings = ResourcesCorSettings.NONE,
 
     var workMode: ResourcesWorkMode = ResourcesWorkMode.PROD,
     var stubCase: ResourcesStubs = ResourcesStubs.NONE,
