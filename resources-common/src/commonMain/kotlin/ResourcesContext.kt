@@ -17,6 +17,13 @@ data class ResourcesContext(
     var timeStart: Instant = Instant.NONE,
     var resourceRequest: Resources = Resources(),
     var resourceFilterRequest: ResourcesFilter = ResourcesFilter(),
+
+    var resourceValidating: Resources = Resources(),
+    var resourceFilterValidating: ResourcesFilter = ResourcesFilter(),
+
+    var resourceValidated: Resources = Resources(),
+    var resourceFilterValidated: ResourcesFilter = ResourcesFilter(),
+
     var resourceResponse: Resources = Resources(),
     var resourcesResponse: MutableList<Resources> = mutableListOf(),
 )

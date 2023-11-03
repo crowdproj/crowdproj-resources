@@ -1,4 +1,4 @@
-package ru.otus.otuskotlin.marketplace.biz.stub
+package ru.otus.otuskotlin.marketplace.biz.stub.stub
 
 import kotlinx.coroutines.test.runTest
 import ru.otus.otuskotlin.marketplace.biz.ResourcesProcessor

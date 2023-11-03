@@ -17,8 +17,14 @@ plugins {
 //    id("io.ktor.plugin")
 }
 
-repositories {
-    maven { url = uri("https://maven.pkg.jetbrains.space/public/p/ktor/eap") }
+val webjars: Configuration by configurations.creating
+dependencies {
+    val swaggerUiVersion: kotlin.String by project
+    webjars("org.webjars:swagger-ui:$swaggerUiVersion")
+}
+
+application {
+    mainClass.set("io.ktor.server.cio.EngineMain")
 }
 
 //application {
@@ -41,15 +47,15 @@ kotlin {
     jvm {
         withJava()
     }
-    linuxX64 {}
-
-    targets.withType<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget> {
-        binaries {
-            executable {
-                entryPoint = "ru.otus.otuskotlin.marketplace.app.main"
-            }
-        }
-    }
+//    listOf(
+//        linuxX64 {},
+//    ).forEach {
+//        it.binaries {
+//            executable {
+//                entryPoint = "ru.otus.otuskotlin.marketplace.app.main"
+//            }
+//        }
+//    }
 
     sourceSets {
         val commonMain by getting {
@@ -70,11 +76,12 @@ kotlin {
                 implementation(ktor("auth")) // "io.ktor:ktor-auth:$ktorVersion"
 
                 implementation(project(":resources-common"))
+                implementation(project(":resources-app-common"))
                 implementation(project(":resources-biz"))
 
-                // v2 api
-//                implementation(project(":ok-marketplace-api-v2-kmp"))
-//                implementation(project(":ok-marketplace-mappers-v2"))
+                // transport models
+                implementation(project(":resources-api-v2"))
+                implementation(project(":resources-api-v2-mappers"))
 
                 // Stubs
                 implementation(project(":resources-stubs"))
@@ -82,6 +89,11 @@ kotlin {
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
+
+                // logging
+                implementation(project(":resources-api-log1"))
+                implementation(project(":resources-mappers-log1"))
+                implementation(project(":resources-lib-logging-common"))
             }
         }
 
@@ -122,6 +134,7 @@ kotlin {
                 implementation(ktor("auth-jwt")) // "io.ktor:ktor-auth-jwt:$ktorVersion"
 
                 implementation("ch.qos.logback:logback-classic:$logbackVersion")
+                implementation(project(":resources-lib-logging-logback"))
 
                 // transport models
                 implementation(project(":resources-api-v1"))

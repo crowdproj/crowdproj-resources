@@ -15,8 +15,8 @@ fun ResourcesContext.fromTransport(request: IRequest) = when (request) {
     else -> throw UnknownRequestClass(request.javaClass)
 }
 
-private fun String?.toAdId() = this?.let { ResourcesId(it) } ?: ResourcesId.NONE
-private fun String?.toAdWithId() = Resources(id = this.toAdId())
+private fun String?.toResId() = this?.let { ResourcesId(it) } ?: ResourcesId.NONE
+private fun String?.toResWithId() = Resources(id = this.toResId())
 private fun IRequest?.requestId() = this?.requestId?.let { ResourcesRequestId(it) } ?: ResourcesRequestId.NONE
 
 private fun ResourceDebug?.transportToWorkMode(): ResourcesWorkMode = when (this?.mode) {
@@ -30,12 +30,12 @@ private fun ResourceDebug?.transportToStubCase(): ResourcesStubs = when (this?.s
     ResourceRequestDebugStubs.SUCCESS -> ResourcesStubs.SUCCESS
     ResourceRequestDebugStubs.NOT_FOUND -> ResourcesStubs.NOT_FOUND
     ResourceRequestDebugStubs.BAD_ID -> ResourcesStubs.BAD_ID
-    ResourceRequestDebugStubs.BAD_TITLE -> ResourcesStubs.BAD_TITLE
-    ResourceRequestDebugStubs.BAD_DESCRIPTION -> ResourcesStubs.BAD_DESCRIPTION
+    ResourceRequestDebugStubs.BAD_OTHER_ID -> ResourcesStubs.BAD_OTHER_ID
+    ResourceRequestDebugStubs.BAD_SCHEDULE_ID -> ResourcesStubs.BAD_SCHEDULE_ID
     ResourceRequestDebugStubs.BAD_VISIBILITY -> ResourcesStubs.BAD_VISIBILITY
     ResourceRequestDebugStubs.CANNOT_DELETE -> ResourcesStubs.CANNOT_DELETE
     ResourceRequestDebugStubs.BAD_SEARCH_STRING -> ResourcesStubs.BAD_SEARCH_STRING
-    null -> ResourcesStubs.NONE
+    else -> ResourcesStubs.NONE
 }
 
 fun ResourcesContext.fromTransport(request: ResourceCreateRequest) {
@@ -49,7 +49,7 @@ fun ResourcesContext.fromTransport(request: ResourceCreateRequest) {
 fun ResourcesContext.fromTransport(request: ResourceReadRequest) {
     command = ResourcesCommand.READ
     requestId = request.requestId()
-    resourceRequest = request.resource?.id.toAdWithId()
+    resourceRequest = request.resource?.id.toResWithId()
     workMode = request.debug.transportToWorkMode()
     stubCase = request.debug.transportToStubCase()
 }
@@ -65,7 +65,7 @@ fun ResourcesContext.fromTransport(request: ResourceUpdateRequest) {
 fun ResourcesContext.fromTransport(request: ResourceDeleteRequest) {
     command = ResourcesCommand.DELETE
     requestId = request.requestId()
-    resourceRequest = request.resource?.id.toAdWithId()
+    resourceRequest = request.resource?.id.toResWithId()
     workMode = request.debug.transportToWorkMode()
     stubCase = request.debug.transportToStubCase()
 }
@@ -90,7 +90,7 @@ private fun ResourceCreateObject.toInternal(): Resources = Resources(
 )
 
 private fun ResourceUpdateObject.toInternal(): Resources = Resources(
-    id = this.id.toAdId(),
+    id = this.id.toResId(),
     resourcesId = this.resourceId.toOtherId(),
     scheduleId = this.scheduleId.toScheduleId(),
     visible = this.visible.fromTransport(),

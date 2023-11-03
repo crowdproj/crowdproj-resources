@@ -1,4 +1,4 @@
-package ru.otus.otuskotlin.marketplace.biz.stub
+package ru.otus.otuskotlin.marketplace.biz.stub.stub
 
 import kotlinx.coroutines.test.runTest
 import ru.otus.otuskotlin.marketplace.biz.ResourcesProcessor
@@ -8,41 +8,42 @@ import ru.otus.otuskotlin.marketplace.common.stubs.ResourcesStubs
 import ru.otus.otuskotlin.marketplace.stubs.ResourcesStub
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
+import kotlin.test.fail
 
-class ResourceReadStubTest {
+class ResourceSearchStubTest {
 
     private val processor = ResourcesProcessor()
-    private val id = ResourcesId("666")
+    private val filter = ResourcesFilter(searchString = "1111")
 
     @Test
     fun read() = runTest {
 
         val ctx = ResourcesContext(
-            command = ResourcesCommand.READ,
+            command = ResourcesCommand.SEARCH,
             state = ResourcesState.NONE,
             workMode = ResourcesWorkMode.STUB,
             stubCase = ResourcesStubs.SUCCESS,
-            resourceRequest = Resources(
-                id = id,
-            ),
+            resourceFilterRequest = filter,
         )
         processor.exec(ctx)
+        assertTrue(ctx.resourcesResponse.size > 1)
+        val first = ctx.resourcesResponse.firstOrNull() ?: fail("Empty response list")
+        assertTrue(first.resourcesId.toString().contains(filter.searchString))
+        assertTrue(first.scheduleId.toString().contains(filter.searchString))
         with (ResourcesStub.get()) {
-            assertEquals(id, ctx.resourceResponse.id)
-            assertEquals(resourcesId, ctx.resourceResponse.resourcesId)
-            assertEquals(scheduleId, ctx.resourceResponse.scheduleId)
-            assertEquals(visible, ctx.resourceResponse.visible)
+            assertEquals(visible, first.visible)
         }
     }
 
     @Test
     fun badId() = runTest {
         val ctx = ResourcesContext(
-            command = ResourcesCommand.READ,
+            command = ResourcesCommand.SEARCH,
             state = ResourcesState.NONE,
             workMode = ResourcesWorkMode.STUB,
             stubCase = ResourcesStubs.BAD_ID,
-            resourceRequest = Resources(),
+            resourceFilterRequest = filter,
         )
         processor.exec(ctx)
         assertEquals(Resources(), ctx.resourceResponse)
@@ -53,13 +54,11 @@ class ResourceReadStubTest {
     @Test
     fun databaseError() = runTest {
         val ctx = ResourcesContext(
-            command = ResourcesCommand.READ,
+            command = ResourcesCommand.SEARCH,
             state = ResourcesState.NONE,
             workMode = ResourcesWorkMode.STUB,
             stubCase = ResourcesStubs.DB_ERROR,
-            resourceRequest = Resources(
-                id = id,
-            ),
+            resourceFilterRequest = filter,
         )
         processor.exec(ctx)
         assertEquals(Resources(), ctx.resourceResponse)
@@ -69,13 +68,11 @@ class ResourceReadStubTest {
     @Test
     fun badNoCase() = runTest {
         val ctx = ResourcesContext(
-            command = ResourcesCommand.READ,
+            command = ResourcesCommand.SEARCH,
             state = ResourcesState.NONE,
             workMode = ResourcesWorkMode.STUB,
             stubCase = ResourcesStubs.BAD_SEARCH_STRING,
-            resourceRequest = Resources(
-                id = id,
-            ),
+            resourceFilterRequest = filter,
         )
         processor.exec(ctx)
         assertEquals(Resources(), ctx.resourceResponse)

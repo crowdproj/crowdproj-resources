@@ -10,7 +10,7 @@ class RequestSerializationTest {
         requestId = "123",
         debug = ResourceDebug(
             mode = ResourceRequestDebugMode.STUB,
-            stub = ResourceRequestDebugStubs.BAD_TITLE
+            stub = ResourceRequestDebugStubs.BAD_OTHER_ID
         ),
         resource = ResourceCreateObject(
             resourceId = "1111",
@@ -26,7 +26,7 @@ class RequestSerializationTest {
 
         assertContains(json, Regex("\"resourceId\":\\s*\"1111\""))
         assertContains(json, Regex("\"mode\":\\s*\"stub\""))
-        assertContains(json, Regex("\"stub\":\\s*\"badTitle\""))
+        assertContains(json, Regex("\"stub\":\\s*\"badOtherId\""))
         assertContains(json, Regex("\"requestType\":\\s*\"create\""))
     }
 

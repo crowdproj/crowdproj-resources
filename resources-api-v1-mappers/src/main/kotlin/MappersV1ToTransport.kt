@@ -11,6 +11,8 @@ fun ResourcesContext.toTransportAd(): IResponse = when (val cmd = command) {
     ResourcesCommand.UPDATE -> toTransportUpdate()
     ResourcesCommand.DELETE -> toTransportDelete()
     ResourcesCommand.SEARCH -> toTransportSearch()
+    ResourcesCommand.INIT -> toTransportInit()
+    ResourcesCommand.FINISH -> throw UnknownResourcesCommand(cmd)
     ResourcesCommand.NONE -> throw UnknownResourcesCommand(cmd)
 }
 

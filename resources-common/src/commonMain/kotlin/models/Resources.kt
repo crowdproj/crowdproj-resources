@@ -8,4 +8,9 @@ data class Resources(
     var deleted: Boolean = false,
     var visible: ResourcesVisible = ResourcesVisible.NONE,
     val permissionsClient: MutableSet<ResourcesPermissionClient> = mutableSetOf()
-)
+) {
+    fun deepCopy(): Resources = copy(
+        permissionsClient = permissionsClient.toMutableSet(),
+    )
+
+}

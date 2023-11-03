@@ -1,10 +1,10 @@
 package ru.otus.otuskotlin.marketplace.stubs
 
 import ru.otus.otuskotlin.marketplace.common.models.*
-import ru.otus.otuskotlin.marketplace.stubs.ResourcesStubBolts.AD_DEMAND_BOLT1
+import ru.otus.otuskotlin.marketplace.stubs.ResourcesStubItem.RES_DEMAND_ITEM1
 
 object ResourcesStub {
-    fun get(): Resources = AD_DEMAND_BOLT1.copy()
+    fun get(): Resources = RES_DEMAND_ITEM1.copy()
 
     fun prepareResult(block: Resources.() -> Unit): Resources = get().apply(block)
 
@@ -18,7 +18,7 @@ object ResourcesStub {
     )
 
     private fun resoucesDemand(id: String, filter: String) =
-        resource(AD_DEMAND_BOLT1, id = id, filter = filter)
+        resource(RES_DEMAND_ITEM1, id = id, filter = filter)
 
     private fun resource(base: Resources, id: String, filter: String) = base.copy(
         id = ResourcesId(id),
