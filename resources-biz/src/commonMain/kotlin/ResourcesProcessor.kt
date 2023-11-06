@@ -5,7 +5,9 @@ import ru.otus.otuskotlin.marketplace.common.models.ResourcesCommand
 import ru.otus.otuskotlin.marketplace.common.models.ResourcesWorkMode
 import ru.otus.otuskotlin.marketplace.stubs.ResourcesStub
 
-class ResourcesProcessor {
+
+class ResourcesProcessor(private val settings: ResourcesCorSettings = ResourcesCorSettings()) {
+    //TODO переделать под процессор AD
     suspend fun exec(ctx: ResourcesContext) {
         // TODO: Rewrite temporary stub solution with BIZ
         require(ctx.workMode == ResourcesWorkMode.STUB) {
@@ -18,6 +20,10 @@ class ResourcesProcessor {
             }
             else -> {
                 ctx.resourceResponse = ResourcesStub.get()
+                ctx.resourcesResponse.addAll(CpwResourceStub.prepareSearchList("d-666-01", "111", "222"))
+            }
+            else -> {
+                ctx.resourceResponse = CpwResourceStub.get()
             }
         }
     }

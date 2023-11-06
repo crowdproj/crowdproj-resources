@@ -1,9 +1,12 @@
-package ru.otus.otuskotlin.marketplace.common.models
+package com.crowdproj.resources.common.models
 
 data class ResourcesError(
     val code: String = "",
     val group: String = "",
     val field: String = "",
     val message: String = "",
+    val level: Level = Level.ERROR,
     val exception: Throwable? = null,
-)
+) {
+    enum class Level { INFO, WARN, ERROR }
+}

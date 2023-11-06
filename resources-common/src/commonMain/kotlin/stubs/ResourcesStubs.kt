@@ -1,4 +1,4 @@
-package ru.otus.otuskotlin.marketplace.common.stubs
+package com.crowdproj.resources.common.stubs
 
 enum class ResourcesStubs {
     NONE,
@@ -10,4 +10,5 @@ enum class ResourcesStubs {
     BAD_VISIBILITY,
     CANNOT_DELETE,
     BAD_SEARCH_STRING,
+    DB_ERROR,
 }
