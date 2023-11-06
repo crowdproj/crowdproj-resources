@@ -1,10 +1,10 @@
-package com.crowdproj.resources.biz
+package ru.otus.otuskotlin.marketplace.biz
 
-import com.crowdproj.resources.common.*
-import com.crowdproj.resources.common.config.ResourcesCorSettings
-import com.crowdproj.resources.common.models.ResourcesCommand
-import com.crowdproj.resources.common.models.ResourcesWorkMode
-import com.crowdproj.resources.stubs.CpwResourceStub
+import ru.otus.otuskotlin.marketplace.common.*
+import ru.otus.otuskotlin.marketplace.common.models.ResourcesCommand
+import ru.otus.otuskotlin.marketplace.common.models.ResourcesWorkMode
+import ru.otus.otuskotlin.marketplace.stubs.ResourcesStub
+
 
 class ResourcesProcessor(private val settings: ResourcesCorSettings = ResourcesCorSettings()) {
     //TODO переделать под процессор AD
@@ -16,6 +16,10 @@ class ResourcesProcessor(private val settings: ResourcesCorSettings = ResourcesC
 
         when (ctx.command) {
             ResourcesCommand.SEARCH -> {
+                ctx.resourcesResponse.addAll(ResourcesStub.prepareSearchList("d-666-01", "111", "222"))
+            }
+            else -> {
+                ctx.resourceResponse = ResourcesStub.get()
                 ctx.resourcesResponse.addAll(CpwResourceStub.prepareSearchList("d-666-01", "111", "222"))
             }
             else -> {
