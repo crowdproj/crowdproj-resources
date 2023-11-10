@@ -1,23 +1,18 @@
-package com.crowdproj.resources.app.plugins
+package ru.otus.otuskotlin.marketplace.app.plugins
 
-//import com.crowdproj.resources.repo.inmemory.CwpAdRepoInMemory
-import com.crowdproj.resources.app.configs.ResourceAppSettings
-import com.crowdproj.resources.common.config.ResourcesCorSettings
-import com.crowdproj.resources.common.repo.IResourceRepository
 import io.ktor.server.application.*
-//import ru.otus.otuskotlin.marketplace.backend.repository.inmemory.CwpAdRepoStub
+import ru.otus.otuskotlin.marketplace.app.ResourcesAppSettings
+import ru.otus.otuskotlin.marketplace.biz.ResourcesProcessor
+import ru.otus.otuskotlin.marketplace.common.ResourcesCorSettings
 
-fun Application.initAppSettings(): ResourceAppSettings {
-    return ResourceAppSettings(
-        appUrls = environment.config
-            .propertyOrNull("ktor.urls")
-            ?.getList()
-            ?.filter { it.isNotBlank() }
-            ?: emptyList(),
-        corSettings = ResourcesCorSettings(
-            repoProd = IResourceRepository.NONE, //CwpAdRepoInMemory(),
-            repoTest = IResourceRepository.NONE, //CwpAdRepoInMemory(),
-            repoStub = IResourceRepository.NONE, //CwpAdRepoStub(),
-        )
+
+fun Application.initAppSettings(): ResourcesAppSettings {
+    val corSettings = ResourcesCorSettings(
+        loggerProvider = getLoggerProviderConf()
+    )
+    return ResourcesAppSettings(
+        appUrls = environment.config.propertyOrNull("ktor.urls")?.getList() ?: emptyList(),
+        corSettings = corSettings,
+        processor = ResourcesProcessor(corSettings),
     )
 }
