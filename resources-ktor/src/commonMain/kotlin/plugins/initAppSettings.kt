@@ -5,7 +5,7 @@ import com.crowdproj.resources.app.configs.ResourceAppSettings
 import com.crowdproj.resources.common.config.ResourcesCorSettings
 import com.crowdproj.resources.common.repo.IResourceRepository
 import io.ktor.server.application.*
-//import ru.otus.otuskotlin.marketplace.backend.repository.inmemory.CwpAdRepoStub
+import ru.otus.otuskotlin.marketplace.backend.repository.inmemory.ResourceRepoStub
 
 fun Application.initAppSettings(): ResourceAppSettings {
     return ResourceAppSettings(
@@ -17,7 +17,7 @@ fun Application.initAppSettings(): ResourceAppSettings {
         corSettings = ResourcesCorSettings(
             repoProd = IResourceRepository.NONE, //CwpAdRepoInMemory(),
             repoTest = IResourceRepository.NONE, //CwpAdRepoInMemory(),
-            repoStub = IResourceRepository.NONE, //CwpAdRepoStub(),
+            repoStub = ResourceRepoStub(),
         )
     )
 }

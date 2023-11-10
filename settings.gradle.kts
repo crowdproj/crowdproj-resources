@@ -11,15 +11,12 @@ pluginManagement {
     val ktorVersion: String by settings
 
     plugins {
-        val kotlinVersion: String by settings
-        val ktorPluginVersion: String by settings
         val codeGeneratorVersion: String by settings
         val bmuschkoVersion: String by settings
 
         kotlin("jvm") version kotlinVersion
         kotlin("multiplatform") version kotlinVersion apply false
         kotlin("plugin.serialization") version kotlinVersion apply false
-        id("io.ktor.plugin") version ktorPluginVersion apply false
 
         id("org.springframework.boot") version springframeworkBootVersion apply false
         id("io.spring.dependency-management") version springDependencyManagementVersion apply false
@@ -43,7 +40,8 @@ include("resources-api-v1")
 include("resources-api-v1-mappers")
 include("resources-biz")
 include("resources-stubs")
+include("resources-repo-stubs")
+include("resources-lib-log")
 include("resources-ktor")
-include("resources-kafka")
-include("resources-log")
-include("resources-swagger")
+//include("resources-log")
+//include("resources-swagger")

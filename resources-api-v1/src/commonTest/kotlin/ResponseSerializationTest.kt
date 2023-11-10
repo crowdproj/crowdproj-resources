@@ -1,6 +1,7 @@
 package com.crowdproj.resources.api.v1
 
 import com.crowdproj.resources.api.v1.models.*
+import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
@@ -18,7 +19,9 @@ class ResponseSerializationTest {
 
     @Test
     fun serialize() {
-        val json = apiV1Mapper.writeValueAsString(response)
+        val json = Json.encodeToString(IResponseResource.serializer(), response)
+
+        println(json)
 
         assertContains(json, Regex("\"resourceId\":\\s*\"1111\""))
         assertContains(json, Regex("\"responseType\":\\s*\"create\""))
@@ -26,8 +29,8 @@ class ResponseSerializationTest {
 
     @Test
     fun deserialize() {
-        val json = apiV1Mapper.writeValueAsString(response)
-        val obj = apiV1Mapper.readValue(json, IResponse::class.java) as ResourceCreateResponse
+        val json = Json.encodeToString(IResponseResource.serializer(), response)
+        val obj = Json.decodeFromString(IResponseResource.serializer(), json) as ResourceCreateResponse
 
         assertEquals(response, obj)
     }

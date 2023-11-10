@@ -4,6 +4,8 @@ plugins {
     kotlin("plugin.serialization")
 }
 
+version = rootProject.version
+
 val specDir = "${layout.buildDirectory.get()}/specs"
 val apiVersion = "v1"
 val apiSpec: Configuration by configurations.creating

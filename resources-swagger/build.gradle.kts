@@ -1,10 +1,10 @@
-import org.apache.xerces.impl.dv.util.Base64
-import org.jetbrains.kotlin.incremental.createDirectory
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 plugins {
     kotlin("multiplatform")
-//    kotlin("jvm")
 }
+
+version = rootProject.version
 
 val apiVersion = "v1"
 val apiSpec: Configuration by configurations.creating
@@ -19,7 +19,7 @@ dependencies {
     )
 }
 
-val embeddings = "$buildDir/generate-resources/main/src/commonMain/kotlin"
+val embeddings = layout.buildDirectory.dir("generate-resources/main/src/commonMain/kotlin").get()
 
 kotlin {
     jvm { withJava() }
@@ -57,7 +57,7 @@ tasks {
 
     val prepareSwagger by creating(Copy::class) {
         group = "swagger"
-        destinationDir = file("${buildDir}/swagger")
+        destinationDir = file("${layout.buildDirectory.get()}/swagger")
 //    dependsOn(apiSpec.asPath)
         from("$rootDir/specs") {
             into("specs")
@@ -81,6 +81,7 @@ tasks {
         inputs.dir(resPath)
         var cntr = 0
         doLast {
+            @OptIn(ExperimentalEncodingApi::class)
             val resources = fileTree(resPath).files
                 .map { fileContent ->
                     file("$embeddings/Resource_${cntr}.kt").apply(File::createNewFile).writeText(
@@ -94,7 +95,7 @@ tasks {
                 }
             file("$embeddings/Resources.kt").apply(File::createNewFile).writeText(
                 """
-                        package com.crowdproj.ad.app.resources
+                        package com.crowdproj.resources.app.resources
 
                         val RESOURCES = mapOf(
                             ${

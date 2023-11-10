@@ -5,7 +5,6 @@ window.onload = function() {
     window.ui = SwaggerUIBundle({
         urls: [
             {url: "./specs-resources-v1.yaml", name: "Ad API V1"},
-            // {url: "./specs-ad-v2.yaml", name: "Marketplace API V2"}
         ],
         "urls.primaryName": "Marketplace API V2",
         dom_id: '#swagger-ui',

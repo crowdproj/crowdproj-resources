@@ -398,8 +398,8 @@ components:
         - success
         - notFound
         - badId
-        - badTitle
-        - badDescription
+        - badOtherId
+        - badScheduleId
         - badVisibility
         - cannotDelete
         - badSearchString

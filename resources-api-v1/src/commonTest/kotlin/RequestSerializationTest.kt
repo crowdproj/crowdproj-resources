@@ -1,16 +1,16 @@
 package com.crowdproj.resources.api.v1
 
 import com.crowdproj.resources.api.v1.models.*
+import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
 
 class RequestSerializationTest {
     private val request = ResourceCreateRequest(
-        requestId = "123",
         debug = ResourceDebug(
             mode = ResourceRequestDebugMode.STUB,
-            stub = ResourceRequestDebugStubs.BAD_TITLE
+            stub = ResourceRequestDebugStubs.SUCCESS
         ),
         resource = ResourceCreateObject(
             resourceId = "1111",
@@ -22,29 +22,21 @@ class RequestSerializationTest {
 
     @Test
     fun serialize() {
-        val json = apiV1Mapper.writeValueAsString(request)
+        val json = Json.encodeToString(IRequestResource.serializer(), request)
+
+        println(json)
 
         assertContains(json, Regex("\"resourceId\":\\s*\"1111\""))
         assertContains(json, Regex("\"mode\":\\s*\"stub\""))
-        assertContains(json, Regex("\"stub\":\\s*\"badTitle\""))
+        assertContains(json, Regex("\"stub\":\\s*\"success\""))
         assertContains(json, Regex("\"requestType\":\\s*\"create\""))
     }
 
     @Test
     fun deserialize() {
-        val json = apiV1Mapper.writeValueAsString(request)
-        val obj = apiV1Mapper.readValue(json, IRequest::class.java) as ResourceCreateRequest
+        val json = Json.encodeToString(IRequestResource.serializer(), request)
+        val obj = Json.decodeFromString(IRequestResource.serializer(), json) as ResourceCreateRequest
 
         assertEquals(request, obj)
-    }
-
-    @Test
-    fun deserializeNaked() {
-        val jsonString = """
-            {"requestId": "123"}
-        """.trimIndent()
-        val obj = apiV1Mapper.readValue(jsonString, ResourceCreateRequest::class.java)
-
-        assertEquals("123", obj.requestId)
     }
 }
