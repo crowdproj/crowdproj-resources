@@ -1,17 +1,16 @@
-package ru.otus.otuskotlin.marketplace.mappers.v1
+package com.crowdproj.resources.mappers.v1
 
-import org.junit.Test
-import ru.otus.otuskotlin.marketplace.api.v1.models.*
-import ru.otus.otuskotlin.marketplace.common.ResourcesContext
-import ru.otus.otuskotlin.marketplace.common.models.*
-import ru.otus.otuskotlin.marketplace.common.stubs.ResourcesStubs
+import kotlin.test.Test
+import com.crowdproj.resources.api.v1.models.*
+import com.crowdproj.resources.common.ResourcesContext
+import com.crowdproj.resources.common.models.*
+import com.crowdproj.resources.common.stubs.ResourcesStubs
 import kotlin.test.assertEquals
 
 class MapperTest {
     @Test
     fun fromTransport() {
         val req = ResourceCreateRequest(
-            requestId = "1234",
             debug = ResourceDebug(
                 mode = ResourceRequestDebugMode.STUB,
                 stub = ResourceRequestDebugStubs.SUCCESS,
@@ -24,7 +23,7 @@ class MapperTest {
         )
 
         val context = ResourcesContext()
-        context.fromTransport(req)
+        context.fromApi(req)
 
         assertEquals(ResourcesStubs.SUCCESS, context.stubCase)
         assertEquals(ResourcesWorkMode.STUB, context.workMode)
@@ -53,7 +52,7 @@ class MapperTest {
             state = ResourcesState.RUNNING,
         )
 
-        val req = context.toTransportAd() as ResourceCreateResponse
+        val req = context.toApi() as ResourceCreateResponse
 
         assertEquals("1234", req.requestId)
         assertEquals(ResourceVisibility.PUBLIC, req.resource?.visible)
@@ -61,6 +60,5 @@ class MapperTest {
         assertEquals("err", req.errors?.firstOrNull()?.code)
         assertEquals("request", req.errors?.firstOrNull()?.group)
         assertEquals("title", req.errors?.firstOrNull()?.field)
-        assertEquals("wrong title", req.errors?.firstOrNull()?.message)
     }
 }

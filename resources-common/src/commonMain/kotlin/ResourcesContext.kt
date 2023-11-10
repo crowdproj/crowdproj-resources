@@ -1,8 +1,8 @@
-package ru.otus.otuskotlin.marketplace.common
+package com.crowdproj.resources.common
 
 import kotlinx.datetime.Instant
-import ru.otus.otuskotlin.marketplace.common.models.*
-import ru.otus.otuskotlin.marketplace.common.stubs.ResourcesStubs
+import com.crowdproj.resources.common.models.*
+import com.crowdproj.resources.common.stubs.ResourcesStubs
 
 data class ResourcesContext(
     var command: ResourcesCommand = ResourcesCommand.NONE,
