@@ -78,7 +78,7 @@ kotlin {
                 implementation(project(":resources-api-v1"))
                 implementation(project(":resources-api-v1-mappers"))
                 implementation(project(":resources-biz"))
-                //implementation(project(":resources-repo-inmemory"))
+                implementation(project(":resources-repo-inmemory"))
                 implementation(project(":resources-repo-stubs"))
                 //implementation(project(":resources-swagger"))
 

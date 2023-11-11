@@ -70,3 +70,12 @@ fun errorRepoConcurrency(
     exception = exception ?: RepoConcurrencyException(expectedLock, actualLock),
 )
 
+val errorNotFound = ResourcesError(
+    field = "id",
+    message = "Not Found",
+    code = "not-found"
+)
+val errorEmptyId = ResourcesError(
+    field = "id",
+    message = "Id must not be null or blank"
+)

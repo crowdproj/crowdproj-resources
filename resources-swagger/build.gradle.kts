@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.incremental.createDirectory
+import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 plugins {
