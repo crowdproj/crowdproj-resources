@@ -2,24 +2,24 @@ package ru.otus.otuskotlin.marketplace.app.v1
 
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
-import ru.otus.otuskotlin.marketplace.biz.ResourcesProcessor
+import ru.otus.otuskotlin.marketplace.app.ResourcesAppSettings
 
-fun Route.v1Resource(processor: ResourcesProcessor) {
+fun Route.v1Resources(appSettings: ResourcesAppSettings) {
     route("resource") {
         post("create") {
-            call.createResource(processor)
+            call.createRes(appSettings)
         }
         post("read") {
-            call.readResource(processor)
+            call.readRes(appSettings)
         }
         post("update") {
-            call.updateResource(processor)
+            call.updateRes(appSettings)
         }
         post("delete") {
-            call.deleteResource(processor)
+            call.deleteRes(appSettings)
         }
         post("search") {
-            call.searchResource(processor)
+            call.searchRes(appSettings)
         }
     }
 }

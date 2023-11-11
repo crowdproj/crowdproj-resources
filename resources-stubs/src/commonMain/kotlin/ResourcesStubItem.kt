@@ -2,8 +2,8 @@ package ru.otus.otuskotlin.marketplace.stubs
 
 import ru.otus.otuskotlin.marketplace.common.models.*
 
-object ResourcesStubBolts {
-    val AD_DEMAND_BOLT1: Resources
+object ResourcesStubItem {
+    val RES_DEMAND_ITEM1: Resources
         get() = Resources(
             id = ResourcesId("666"),
             resourcesId = OtherResourcesId("resource-1"),

@@ -20,6 +20,7 @@ kotlin {
 
                 implementation(project(":resources-common"))
                 implementation(project(":resources-stubs"))
+                implementation(project(":resources-lib-cor"))
             }
         }
         @Suppress("UNUSED_VARIABLE")

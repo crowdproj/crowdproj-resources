@@ -24,7 +24,7 @@ class KafkaControllerTest {
     @Test
     fun runKafka() {
         val consumer = MockConsumer<String, String>(OffsetResetStrategy.EARLIEST)
-        val producer = MockProducer<String, String>(true, StringSerializer(), StringSerializer())
+        val producer = MockProducer(true, StringSerializer(), StringSerializer())
         val config = AppKafkaConfig()
         val inputTopic = config.kafkaTopicInV1
         val outputTopic = config.kafkaTopicOutV1

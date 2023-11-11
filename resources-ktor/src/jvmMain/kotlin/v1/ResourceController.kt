@@ -1,49 +1,26 @@
 package ru.otus.otuskotlin.marketplace.app.v1
 
 import io.ktor.server.application.*
-import io.ktor.server.request.*
-import io.ktor.server.response.*
 import ru.otus.otuskotlin.marketplace.api.v1.models.*
-import ru.otus.otuskotlin.marketplace.biz.ResourcesProcessor
-import ru.otus.otuskotlin.marketplace.common.ResourcesContext
-import ru.otus.otuskotlin.marketplace.mappers.v1.*
+import ru.otus.otuskotlin.marketplace.app.ResourcesAppSettings
+import kotlin.reflect.KClass
 
-suspend fun ApplicationCall.createResource(processor: ResourcesProcessor) {
-    val request = receive<ResourceCreateRequest>()
-    val context = ResourcesContext()
-    context.fromTransport(request)
-    processor.exec(context)
-    respond(context.toTransportCreate())
-}
+private val clCreate: KClass<*> = ApplicationCall::createRes::class
+suspend fun ApplicationCall.createRes(appSettings: ResourcesAppSettings) =
+    processV1<ResourceCreateRequest, ResourceCreateResponse>(appSettings, clCreate, "create")
 
-suspend fun ApplicationCall.readResource(processor: ResourcesProcessor) {
-    val request = receive<ResourceReadRequest>()
-    val context = ResourcesContext()
-    context.fromTransport(request)
-    processor.exec(context)
-    respond(context.toTransportRead())
-}
+private val clRead: KClass<*> = ApplicationCall::readRes::class
+suspend fun ApplicationCall.readRes(appSettings: ResourcesAppSettings) =
+    processV1<ResourceReadRequest, ResourceReadResponse>(appSettings, clRead, "read")
 
-suspend fun ApplicationCall.updateResource(processor: ResourcesProcessor) {
-    val request = receive<ResourceUpdateRequest>()
-    val context = ResourcesContext()
-    context.fromTransport(request)
-    processor.exec(context)
-    respond(context.toTransportUpdate())
-}
+private val clUpdate: KClass<*> = ApplicationCall::updateRes::class
+suspend fun ApplicationCall.updateRes(appSettings: ResourcesAppSettings) =
+    processV1<ResourceUpdateRequest, ResourceUpdateResponse>(appSettings, clUpdate, "update")
 
-suspend fun ApplicationCall.deleteResource(processor: ResourcesProcessor) {
-    val request = receive<ResourceDeleteRequest>()
-    val context = ResourcesContext()
-    context.fromTransport(request)
-    processor.exec(context)
-    respond(context.toTransportDelete())
-}
+private val clDelete: KClass<*> = ApplicationCall::deleteRes::class
+suspend fun ApplicationCall.deleteRes(appSettings: ResourcesAppSettings) =
+    processV1<ResourceDeleteRequest, ResourceDeleteResponse>(appSettings, clDelete, "delete")
 
-suspend fun ApplicationCall.searchResource(processor: ResourcesProcessor) {
-    val request = receive<ResourceSearchRequest>()
-    val context = ResourcesContext()
-    context.fromTransport(request)
-    processor.exec(context)
-    respond(context.toTransportSearch())
-}
+private val clSearch: KClass<*> = ApplicationCall::searchRes::class
+suspend fun ApplicationCall.searchRes(appSettings: ResourcesAppSettings) =
+    processV1<ResourceSearchRequest, ResourceSearchResponse>(appSettings, clSearch, "search")

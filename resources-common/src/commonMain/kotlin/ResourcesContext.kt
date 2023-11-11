@@ -8,6 +8,7 @@ data class ResourcesContext(
     var command: ResourcesCommand = ResourcesCommand.NONE,
     var state: ResourcesState = ResourcesState.NONE,
     val errors: MutableList<ResourcesError> = mutableListOf(),
+    var settings: ResourcesCorSettings = ResourcesCorSettings.NONE,
 
     var workMode: ResourcesWorkMode = ResourcesWorkMode.PROD,
     var stubCase: ResourcesStubs = ResourcesStubs.NONE,
@@ -16,6 +17,13 @@ data class ResourcesContext(
     var timeStart: Instant = Instant.NONE,
     var resourceRequest: Resources = Resources(),
     var resourceFilterRequest: ResourcesFilter = ResourcesFilter(),
+
+    var resourceValidating: Resources = Resources(),
+    var resourceFilterValidating: ResourcesFilter = ResourcesFilter(),
+
+    var resourceValidated: Resources = Resources(),
+    var resourceFilterValidated: ResourcesFilter = ResourcesFilter(),
+
     var resourceResponse: Resources = Resources(),
     var resourcesResponse: MutableList<Resources> = mutableListOf(),
 )
