@@ -49,6 +49,12 @@ fun ResourcesContext.toApiSearch() = ResourceSearchResponse(
     resources = resourcesResponse.mapNotNull { toApiResources(it) }.takeIf { it.isNotEmpty() },
 )
 
+fun ResourcesContext.toTransportInit() = ResourceInitResponse(
+    requestId = this.requestId.asString().takeIf { it.isNotBlank() },
+    result = toApiResult(),
+    errors = toApiErrors(),
+)
+
 private fun toApiResources(resource: Resources): ResourceResponseObject? = if (resource.isEmpty()) {
     null
 } else {

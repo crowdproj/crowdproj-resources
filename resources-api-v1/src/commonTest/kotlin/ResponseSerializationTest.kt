@@ -1,7 +1,6 @@
 package com.crowdproj.resources.api.v1
 
 import com.crowdproj.resources.api.v1.models.*
-import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
@@ -19,7 +18,7 @@ class ResponseSerializationTest {
 
     @Test
     fun serialize() {
-        val json = Json.encodeToString(IResponseResource.serializer(), response)
+        val json = encodeResponse(response)
 
         println(json)
 
@@ -29,8 +28,8 @@ class ResponseSerializationTest {
 
     @Test
     fun deserialize() {
-        val json = Json.encodeToString(IResponseResource.serializer(), response)
-        val obj = Json.decodeFromString(IResponseResource.serializer(), json) as ResourceCreateResponse
+        val json = encodeResponse(response)
+        val obj = decodeResponse(json) as ResourceCreateResponse
 
         assertEquals(response, obj)
     }

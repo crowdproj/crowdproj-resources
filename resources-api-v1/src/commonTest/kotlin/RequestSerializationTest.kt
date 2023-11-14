@@ -1,16 +1,15 @@
 package com.crowdproj.resources.api.v1
 
 import com.crowdproj.resources.api.v1.models.*
-import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
 
 class RequestSerializationTest {
-    private val request = ResourceCreateRequest(
-        debug = ResourceDebug(
-            mode = ResourceRequestDebugMode.STUB,
-            stub = ResourceRequestDebugStubs.SUCCESS
+    private val request: IRequestResource = ResourceCreateRequest(
+        debug = CpBaseDebug(
+            mode = CpRequestDebugMode.STUB,
+            stub = CpRequestDebugStubs.SUCCESS
         ),
         resource = ResourceCreateObject(
             resourceId = "1111",
@@ -22,7 +21,7 @@ class RequestSerializationTest {
 
     @Test
     fun serialize() {
-        val json = Json.encodeToString(IRequestResource.serializer(), request)
+        val json = encodeRequest(request)
 
         println(json)
 
@@ -34,8 +33,8 @@ class RequestSerializationTest {
 
     @Test
     fun deserialize() {
-        val json = Json.encodeToString(IRequestResource.serializer(), request)
-        val obj = Json.decodeFromString(IRequestResource.serializer(), json) as ResourceCreateRequest
+        val json = encodeRequest(request)
+        val obj = decodeRequest(json) as ResourceCreateRequest
 
         assertEquals(request, obj)
     }

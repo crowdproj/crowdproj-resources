@@ -8,5 +8,6 @@ data class ResourcesError(
     val level: Level = Level.ERROR,
     val exception: Throwable? = null,
 ) {
-    enum class Level { INFO, WARN, ERROR }
+    @Suppress("unused")
+    enum class Level { RACE, DEBUG, INFO, WARN, ERROR }
 }

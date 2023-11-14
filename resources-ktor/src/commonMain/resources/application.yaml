@@ -1,14 +1,13 @@
 ktor:
-  development: false
   deployment:
-    port: "$PORT:8080"
-  #  watch:
-  #    - classes
-  #    - resources
+    port: 8081
   application:
     modules:
       - com.crowdproj.resources.app.ApplicationKt.module
-  urls:
-    - "$APP_URL:http://0.0.0.0:8080/"
-    - "$APP_URL_1:"
-    - "$APP_URL_2:"
+
+jwt:
+  secret: "secret"
+  issuer: "Crowdproj"
+  audience: "prop-users"
+  realm: "resources"
+  clientId: "crowdproj-resources-service"

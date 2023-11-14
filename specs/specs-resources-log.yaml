@@ -1,0 +1,109 @@
+openapi: 3.0.4
+info:
+  title: Resources log models
+  description: Log models for logging services of Resources
+  contact:
+    name: Sergey Okatov
+    email: sokatov@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+paths: { }
+
+components:
+  schemas:
+    CommonLogModel:
+      title: Common log model
+      description: Common log model for all microservices
+      type: object
+      properties:
+        messageTime:
+          type: string
+        logId:
+          type: string
+        source:
+          type: string
+        resource:
+          $ref: '#/components/schemas/ResourceLogModel'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorLogModel'
+
+    ResourceLogModel:
+      title: log model for microservice Resources
+      type: object
+      properties:
+        requestId:
+          type: string
+        operation:
+          type: string
+          enum:
+            - create
+            - read
+            - update
+            - delete
+            - search
+        requestResource:
+          $ref: '#/components/schemas/ResourceLog'
+        requestResources:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceLog'
+        requestFilter:
+          $ref: '#/components/schemas/ResourceFilterLog'
+        responseResource:
+          $ref: '#/components/schemas/ResourceLog'
+        responseResources:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceLog'
+
+    ErrorLogModel:
+      title: log model for error
+      type: object
+      properties:
+        message:
+          type: string
+        field:
+          type: string
+        code:
+          type: string
+        level:
+          type: string
+
+    OtherResourceId:
+      type: string
+      description: link to the Resource from other microservices
+
+    ScheduleId:
+      type: string
+      description: link to the Resource Schedule Template microservice
+
+    UserId:
+      type: string
+      description: A unique identifier user
+
+    ResourceLog:
+      title: log model for resources
+      type: object
+      properties:
+        id:
+          type: string
+        resourceId:
+          $ref: '#/components/schemas/OtherResourceId'
+        scheduleId:
+          $ref: '#/components/schemas/ScheduleId'
+        ownerId:
+          $ref: '#/components/schemas/UserId'
+        deleted:
+          type: boolean
+
+    ResourceFilterLog:
+      description: filters for Resource search
+      properties:
+        searchString:
+          type: string
+          description: Поисковая строка
+

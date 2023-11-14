@@ -36,6 +36,8 @@ pluginManagement {
 
 //include("specs")
 include("resources-common")
+include("resources-api-log")
+include("resources-api-log-mappers")
 include("resources-api-v1")
 include("resources-api-v1-mappers")
 include("resources-biz")
@@ -48,3 +50,4 @@ include("resources-repo-inmemory")
 include("resources-swagger")
 include("resources-repo-postgresql")
 include("resources-lib-logging-common")
+include("resources-lib-logging-logback")

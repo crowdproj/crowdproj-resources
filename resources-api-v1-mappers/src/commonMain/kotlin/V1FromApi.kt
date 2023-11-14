@@ -11,36 +11,42 @@ fun ResourcesContext.fromApi(request: IRequestResource) = when (request) {
     is ResourceUpdateRequest -> fromApi(request)
     is ResourceDeleteRequest -> fromApi(request)
     is ResourceSearchRequest -> fromApi(request)
+    else -> {}
 }
 
 fun ResourcesContext.fromApi(request: ResourceCreateRequest) {
     resolveOperation(request)
     fromApiResourceCreate(request.resource)
-    fromApiDebug(request)
+    workMode = request.debug.transportToWorkMode()
+    stubCase = request.debug.transportToStubCase()
 }
 
 fun ResourcesContext.fromApi(request: ResourceReadRequest) {
     resolveOperation(request)
     fromApiResourceRead(request.resource)
-    fromApiDebug(request)
+    workMode = request.debug.transportToWorkMode()
+    stubCase = request.debug.transportToStubCase()
 }
 
 fun ResourcesContext.fromApi(request: ResourceUpdateRequest) {
     resolveOperation(request)
     fromApiResourceUpdate(request.resource)
-    fromApiDebug(request)
+    workMode = request.debug.transportToWorkMode()
+    stubCase = request.debug.transportToStubCase()
 }
 
 fun ResourcesContext.fromApi(request: ResourceDeleteRequest) {
     resolveOperation(request)
     fromApiResourceDelete(request.resource)
-    fromApiDebug(request)
+    workMode = request.debug.transportToWorkMode()
+    stubCase = request.debug.transportToStubCase()
 }
 
 fun ResourcesContext.fromApi(request: ResourceSearchRequest) {
     resolveOperation(request)
     fromApiResourceSearch(request.resourceFilter)
-    fromApiDebug(request)
+    workMode = request.debug.transportToWorkMode()
+    stubCase = request.debug.transportToStubCase()
 }
 
 
@@ -85,28 +91,18 @@ private fun String?.toResourcesLock() = this?.let { ResourcesLock(it) } ?: Resou
 private fun String?.fromApiOtherResourcesId() = this?.let { OtherResourcesId(it) } ?: OtherResourcesId.NONE
 private fun String?.fromApiScheduleId() = this?.let { ScheduleId(it) } ?: ScheduleId.NONE
 
-private fun ResourceRequestDebugMode?.fromApiWorkMode(): ResourcesWorkMode = when (this) {
-    ResourceRequestDebugMode.PROD -> ResourcesWorkMode.PROD
-    ResourceRequestDebugMode.TEST -> ResourcesWorkMode.TEST
-    ResourceRequestDebugMode.STUB -> ResourcesWorkMode.STUB
-    null -> ResourcesWorkMode.NONE
+private fun CpBaseDebug?.transportToWorkMode(): ResourcesWorkMode = when (this?.mode) {
+    CpRequestDebugMode.PROD -> ResourcesWorkMode.PROD
+    CpRequestDebugMode.TEST -> ResourcesWorkMode.TEST
+    CpRequestDebugMode.STUB -> ResourcesWorkMode.STUB
+    null -> ResourcesWorkMode.PROD
 }
 
-private fun ResourceRequestDebugStubs?.fromApiStubCase(): ResourcesStubs = when (this) {
-    ResourceRequestDebugStubs.SUCCESS -> ResourcesStubs.SUCCESS
-    ResourceRequestDebugStubs.NOT_FOUND -> ResourcesStubs.NOT_FOUND
-    ResourceRequestDebugStubs.BAD_ID -> ResourcesStubs.BAD_ID
-    ResourceRequestDebugStubs.BAD_OTHER_ID -> ResourcesStubs.BAD_OTHER_ID
-    ResourceRequestDebugStubs.BAD_SCHEDULE_ID -> ResourcesStubs.BAD_SCHEDULE_ID
-    ResourceRequestDebugStubs.BAD_VISIBILITY -> ResourcesStubs.BAD_VISIBILITY
-    ResourceRequestDebugStubs.CANNOT_DELETE -> ResourcesStubs.CANNOT_DELETE
-    ResourceRequestDebugStubs.BAD_SEARCH_STRING -> ResourcesStubs.BAD_SEARCH_STRING
+private fun CpBaseDebug?.transportToStubCase(): ResourcesStubs = when (this?.stub) {
+    CpRequestDebugStubs.SUCCESS -> ResourcesStubs.SUCCESS
+    CpRequestDebugStubs.NOT_FOUND -> ResourcesStubs.NOT_FOUND
+    CpRequestDebugStubs.BAD_ID -> ResourcesStubs.BAD_ID
     null -> ResourcesStubs.NONE
-}
-
-private fun ResourcesContext.fromApiDebug(request: IRequestResource?) {
-    this.workMode = request?.debug?.mode?.fromApiWorkMode() ?: ResourcesWorkMode.NONE
-    this.stubCase = request?.debug?.stub?.fromApiStubCase() ?: ResourcesStubs.NONE
 }
 
 private fun ResourceVisibility?.fromApiVisible(): ResourcesVisible = when (this) {

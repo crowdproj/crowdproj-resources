@@ -11,9 +11,9 @@ class MapperTest {
     @Test
     fun fromTransport() {
         val req = ResourceCreateRequest(
-            debug = ResourceDebug(
-                mode = ResourceRequestDebugMode.STUB,
-                stub = ResourceRequestDebugStubs.SUCCESS,
+            debug =  CpBaseDebug(
+                mode = CpRequestDebugMode.STUB,
+                stub = CpRequestDebugStubs.SUCCESS,
             ),
             resource = ResourceCreateObject(
                 resourceId = "1111",

@@ -1,7 +1,6 @@
 plugins {
     kotlin("multiplatform")
     id("com.crowdproj.generator")
-    kotlin("plugin.serialization")
 }
 
 version = rootProject.version
@@ -22,9 +21,6 @@ dependencies {
 
 kotlin {
     jvm { withJava() }
-    js {
-        browser {}
-    }
     linuxX64 {}
 
     sourceSets {
@@ -51,11 +47,6 @@ kotlin {
         val jvmTest by getting {
             dependencies {
                 implementation(kotlin("test-junit"))
-            }
-        }
-        val jsTest by getting {
-            dependencies {
-                implementation(kotlin("test-js"))
             }
         }
     }

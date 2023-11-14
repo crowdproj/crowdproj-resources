@@ -1,13 +1,16 @@
 openapi: 3.0.3
 info:
-  title: "Marketplace ${VERSION_APP}"
+  title: Crowdproj-resources
   description: Resources for Marketplace
+  contact:
+    name: Sergey Okatov
+    email: sokatov@gmail.com
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
 servers:
-  - url: http://localhost:8080/resources
+  - url: http://localhost:8080/v1
 tags:
   - name: resource
     description: Ресурс (время / товар и т.д.)
@@ -18,11 +21,6 @@ paths:
         - resource
       summary: Create resource
       operationId: resourceCreate
-      parameters:
-        - in: header
-          name: X-Request-ID
-          schema:
-            $ref: './base.yaml#/components/schemas/RequestId'
       requestBody:
         description: Request body
         content:
@@ -43,11 +41,6 @@ paths:
         - resource
       summary: Read resource
       operationId: resourceRead
-      parameters:
-        - in: header
-          name: X-Request-ID
-          schema:
-            $ref: './base.yaml#/components/schemas/RequestId'
       requestBody:
         description: Request body
         content:
@@ -68,11 +61,6 @@ paths:
         - resource
       summary: Update resource
       operationId: resourceUpdate
-      parameters:
-        - in: header
-          name: X-Request-ID
-          schema:
-            $ref: './base.yaml#/components/schemas/RequestId'
       requestBody:
         description: Request body
         content:
@@ -93,11 +81,6 @@ paths:
         - resource
       summary: Delete resource
       operationId: resourceDelete
-      parameters:
-        - in: header
-          name: X-Request-ID
-          schema:
-            $ref: './base.yaml#/components/schemas/RequestId'
       requestBody:
         description: Request body
         content:
@@ -118,11 +101,6 @@ paths:
         - resource
       summary: Search resource
       operationId: resourceSearch
-      parameters:
-        - in: header
-          name: X-Request-ID
-          schema:
-            $ref: './base.yaml#/components/schemas/RequestId'
       requestBody:
         description: Request body
         content:
@@ -144,7 +122,6 @@ components:
     IRequestResource:
       allOf:
         - $ref: './base.yaml#/components/schemas/IRequest'
-        - $ref: '#/components/schemas/ResourceRequestDebug'
         - type: object
           discriminator:
             propertyName: requestType
@@ -154,8 +131,6 @@ components:
               update: '#/components/schemas/ResourceUpdateRequest'
               delete: '#/components/schemas/ResourceDeleteRequest'
               search: '#/components/schemas/ResourceSearchRequest'
-    Error:
-      $ref: './base.yaml#/components/schemas/Error'
 
     IResponseResource:
       allOf:
@@ -170,6 +145,15 @@ components:
               delete: '#/components/schemas/ResourceDeleteResponse'
               search: '#/components/schemas/ResourceSearchResponse'
               init: '#/components/schemas/ResourceInitResponse'
+
+    Error:
+      $ref: './base.yaml#/components/schemas/Error'
+
+    RequestId:
+      $ref: './base.yaml#/components/schemas/RequestId'
+
+    UserId:
+      $ref: './base.yaml#/components/schemas/UserId'
 
     ResourceLock:
       type: string
@@ -187,9 +171,13 @@ components:
       type: string
       description: link to the Resource Schedule Template microservice
 
-    UserId:
+    ResourceVisibility:
       type: string
-      description: A unique identifier user
+      description: 'Тип видимости ресурса'
+      enum:
+        - ownerOnly
+        - registeredOnly
+        - public
 
     BaseResource:
       type: object
@@ -201,19 +189,8 @@ components:
           $ref: '#/components/schemas/ScheduleId'
         ownerId:
           $ref: '#/components/schemas/UserId'
-        deleted:
-          type: string
-          description: флаг удаления
         visible:
           $ref: '#/components/schemas/ResourceVisibility'
-
-    ResourceVisibility:
-      type: string
-      description: 'Тип видимости ресурса'
-      enum:
-        - ownerOnly
-        - registeredOnly
-        - public
 
     ResourceInitResponse:
       allOf:
@@ -226,6 +203,7 @@ components:
     ResourceCreateRequest:
       allOf:
         - $ref: '#/components/schemas/IRequestResource'
+        - $ref: '#/components/schemas/RequestDebug'
         - type: object
           properties:
             resource:
@@ -241,6 +219,7 @@ components:
     ResourceReadRequest:
       allOf:
         - $ref: '#/components/schemas/IRequestResource'
+        - $ref: '#/components/schemas/RequestDebug'
         - type: object
           properties:
             resource:
@@ -259,6 +238,7 @@ components:
     ResourceUpdateRequest:
       allOf:
         - $ref: '#/components/schemas/IRequestResource'
+        - $ref: '#/components/schemas/RequestDebug'
         - type: object
           properties:
             resource:
@@ -276,6 +256,7 @@ components:
     ResourceDeleteRequest:
       allOf:
         - $ref: '#/components/schemas/IRequestResource'
+        - $ref: '#/components/schemas/RequestDebug'
         - type: object
           properties:
             resource:
@@ -292,6 +273,7 @@ components:
     ResourceSearchRequest:
       allOf:
         - $ref: '#/components/schemas/IRequestResource'
+        - $ref: '#/components/schemas/RequestDebug'
         - type: object
           properties:
             resourceFilter:
@@ -369,37 +351,5 @@ components:
         - $ref: '#/components/schemas/IResponseResource'
         - $ref: '#/components/schemas/ResourceResponseMulti'
 
-    # STUBS ======================
-    ResourceRequestDebugMode:
-      type: string
-      enum:
-        - prod
-        - test
-        - stub
-
-    ResourceRequestDebug:
-      type: object
-      properties:
-        debug:
-          $ref: '#/components/schemas/ResourceDebug'
-
-    ResourceDebug:
-      type: object
-      properties:
-        mode:
-          $ref: '#/components/schemas/ResourceRequestDebugMode'
-        stub:
-          $ref: '#/components/schemas/ResourceRequestDebugStubs'
-
-    ResourceRequestDebugStubs:
-      type: string
-      description: Перечисления всех стабов
-      enum:
-        - success
-        - notFound
-        - badId
-        - badOtherId
-        - badScheduleId
-        - badVisibility
-        - cannotDelete
-        - badSearchString
+    RequestDebug:
+      $ref: './base.yaml#/components/schemas/CpRequestDebug'
