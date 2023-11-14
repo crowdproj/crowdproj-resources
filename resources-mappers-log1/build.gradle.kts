@@ -2,15 +2,13 @@ plugins {
     kotlin("multiplatform")
 }
 
-version = rootProject.version
-
 kotlin {
-    jvm {}
-    linuxX64 {}
+    jvm { }
+    linuxX64 { }
 
     sourceSets {
         val coroutinesVersion: String by project
-        val corVersion: String by project
+        val datetimeVersion: String by project
 
         all { languageSettings.optIn("kotlin.RequiresOptIn") }
 
@@ -18,21 +16,15 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-common"))
 
-                implementation("com.crowdproj:kotlin-cor:$corVersion")
-
+                implementation(project(":resources-api-log1"))
                 implementation(project(":resources-common"))
-                implementation(project(":resources-stubs"))
-                implementation(project(":resources-lib-cor"))
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:$datetimeVersion")
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
-
-                implementation(project(":resources-repo-stubs"))
-//                implementation(project(":resources-repo-tests"))
-//                implementation(project(":resources-repo-inmemory"))
 
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
             }

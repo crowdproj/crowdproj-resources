@@ -2,6 +2,7 @@ plugins {
     kotlin("multiplatform")
 }
 
+group = rootProject.group
 version = rootProject.version
 
 kotlin {
@@ -9,37 +10,23 @@ kotlin {
     linuxX64 {}
 
     sourceSets {
-        val coroutinesVersion: String by project
-        val corVersion: String by project
-
-        all { languageSettings.optIn("kotlin.RequiresOptIn") }
-
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
 
-                implementation("com.crowdproj:kotlin-cor:$corVersion")
-
+                implementation(project(":resources-api-v2"))
                 implementation(project(":resources-common"))
-                implementation(project(":resources-stubs"))
-                implementation(project(":resources-lib-cor"))
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
-
-                implementation(project(":resources-repo-stubs"))
-//                implementation(project(":resources-repo-tests"))
-//                implementation(project(":resources-repo-inmemory"))
-
-                api("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
             }
         }
         val jvmMain by getting {
             dependencies {
-                implementation(kotlin("stdlib-jdk8"))
+                implementation(kotlin("stdlib"))
             }
         }
         val jvmTest by getting {
@@ -47,5 +34,6 @@ kotlin {
                 implementation(kotlin("test-junit"))
             }
         }
+
     }
 }

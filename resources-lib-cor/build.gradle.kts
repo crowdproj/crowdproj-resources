@@ -2,39 +2,38 @@ plugins {
     kotlin("multiplatform")
 }
 
-version = rootProject.version
-
 kotlin {
+    js(IR) {
+        browser()
+        nodejs()
+    }
     jvm {}
     linuxX64 {}
 
     sourceSets {
         val coroutinesVersion: String by project
-        val corVersion: String by project
-
-        all { languageSettings.optIn("kotlin.RequiresOptIn") }
 
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
-
-                implementation("com.crowdproj:kotlin-cor:$corVersion")
-
-                implementation(project(":resources-common"))
-                implementation(project(":resources-stubs"))
-                implementation(project(":resources-lib-cor"))
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
-
-                implementation(project(":resources-repo-stubs"))
-//                implementation(project(":resources-repo-tests"))
-//                implementation(project(":resources-repo-inmemory"))
-
-                api("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
+            }
+        }
+        val jsMain by getting {
+            dependencies {
+                implementation(kotlin("stdlib-js"))
+            }
+        }
+        val jsTest by getting {
+            dependencies {
+                implementation(kotlin("test-js"))
             }
         }
         val jvmMain by getting {
