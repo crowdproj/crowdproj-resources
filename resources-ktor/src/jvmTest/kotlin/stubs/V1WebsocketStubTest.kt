@@ -1,12 +1,12 @@
-package ru.otus.otuskotlin.marketplace.app.stubs
+package com.crowdproj.resources.app.stubs
 
 import io.ktor.client.plugins.websocket.*
 import io.ktor.server.testing.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.withTimeout
-import ru.otus.otuskotlin.marketplace.api.v1.apiV1Mapper
-import ru.otus.otuskotlin.marketplace.api.v1.models.*
-import ru.otus.otuskotlin.marketplace.app.moduleJvm
+import com.crowdproj.resources.api.v1.apiV1Mapper
+import com.crowdproj.resources.api.v1.models.*
+import com.crowdproj.resources.app.moduleJvm
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
