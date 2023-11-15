@@ -1,6 +1,7 @@
 plugins {
     kotlin("multiplatform")
     id("com.crowdproj.generator")
+    kotlin("plugin.serialization")
 }
 
 version = rootProject.version

@@ -22,7 +22,6 @@ kotlin {
 
                 implementation(project(":resources-common"))
                 implementation(project(":resources-stubs"))
-                implementation(project(":resources-lib-cor"))
             }
         }
         val commonTest by getting {
@@ -32,7 +31,7 @@ kotlin {
 
                 implementation(project(":resources-repo-stubs"))
 //                implementation(project(":resources-repo-tests"))
-//                implementation(project(":resources-repo-inmemory"))
+                implementation(project(":resources-repo-inmemory"))
 
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
             }

@@ -26,9 +26,8 @@ dependencies {
     // transport models
     implementation(project(":resources-common"))
     implementation(project(":resources-api-v1"))
-    implementation(project(":resources-api-v2"))
     implementation(project(":resources-api-v1-mappers"))
-    implementation(project(":resources-api-v2-mappers"))
+
     // logic
     implementation(project(":resources-biz"))
 
