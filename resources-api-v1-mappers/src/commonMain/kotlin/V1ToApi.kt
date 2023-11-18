@@ -3,15 +3,17 @@ package com.crowdproj.resources.mappers.v1
 import com.crowdproj.resources.api.v1.models.*
 import com.crowdproj.resources.common.ResourcesContext
 import com.crowdproj.resources.common.models.*
+import com.crowdproj.resources.mappers.v1.exceptions.UnknownMkplCommand
 
 
-fun ResourcesContext.toApi(): IResponseResource? = when (command) {
-    ResourcesCommand.NONE -> null
+fun ResourcesContext.toApi(): IResponseResource = when (command) {
     ResourcesCommand.CREATE -> toApiCreate()
     ResourcesCommand.READ -> toApiRead()
     ResourcesCommand.UPDATE -> toApiUpdate()
     ResourcesCommand.DELETE -> toApiDelete()
     ResourcesCommand.SEARCH -> toApiSearch()
+    ResourcesCommand.NONE -> throw UnknownMkplCommand(command)
+    else -> throw UnknownMkplCommand(command)
 }
 
 fun ResourcesContext.toApiCreate() = ResourceCreateResponse(

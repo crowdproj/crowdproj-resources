@@ -1,7 +1,7 @@
 package com.crowdproj.resources.biz.validation
 
 import com.crowdproj.resources.biz.ResourcesProcessor
-import com.crowdproj.resources.common.config.ResourcesCorSettings
+import com.crowdproj.resources.common.ResourcesCorSettings
 import com.crowdproj.resources.common.models.ResourcesCommand
 import ru.otus.otuskotlin.marketplace.backend.repository.inmemory.ResourceRepoStub
 import kotlin.test.Test

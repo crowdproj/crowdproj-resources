@@ -5,13 +5,13 @@ import com.crowdproj.resources.biz.repo.*
 import com.crowdproj.resources.biz.stubs.*
 import com.crowdproj.resources.biz.validation.*
 import com.crowdproj.resources.common.ResourcesContext
-import com.crowdproj.resources.common.config.ResourcesCorSettings
 import com.crowdproj.kotlin.cor.handlers.chain
 import com.crowdproj.kotlin.cor.handlers.worker
 import com.crowdproj.kotlin.cor.rootChain
+import com.crowdproj.resources.common.ResourcesCorSettings
 import com.crowdproj.resources.common.models.*
 
-class ResourcesProcessor(private val settings: ResourcesCorSettings = ResourcesCorSettings()) {
+class ResourcesProcessor(val settings: ResourcesCorSettings = ResourcesCorSettings()) {
     suspend fun exec(ctx: ResourcesContext) = BusinessChain.exec(ctx.apply { settings = this@ResourcesProcessor.settings })
 
     companion object {

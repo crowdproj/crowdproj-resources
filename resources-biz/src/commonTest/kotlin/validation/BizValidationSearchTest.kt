@@ -2,7 +2,7 @@ package com.crowdproj.resources.biz.validation
 
 import com.crowdproj.resources.biz.ResourcesProcessor
 import com.crowdproj.resources.common.ResourcesContext
-import com.crowdproj.resources.common.config.ResourcesCorSettings
+import com.crowdproj.resources.common.ResourcesCorSettings
 import com.crowdproj.resources.common.models.ResourcesCommand
 import com.crowdproj.resources.common.models.ResourcesFilter
 import com.crowdproj.resources.common.models.ResourcesState
