@@ -2,7 +2,7 @@ package com.crowdproj.resources.app.plugins
 
 import com.crowdproj.resources.app.configs.ResourceAppSettings
 import com.crowdproj.resources.biz.ResourcesProcessor
-import com.crowdproj.resources.common.config.ResourcesCorSettings
+import com.crowdproj.resources.common.ResourcesCorSettings
 import com.crowdproj.resources.logging.common.MpLoggerProvider
 import io.ktor.server.application.*
 import ru.otus.otuskotlin.marketplace.backend.repository.inmemory.ResourceRepoStub
