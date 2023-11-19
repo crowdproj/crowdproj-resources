@@ -1,20 +1,22 @@
-package ru.otus.otuskotlin.marketplace.biz.stub.stub
+package com.crowdproj.resources.biz.stub
 
+import com.crowdproj.resources.biz.ResourcesProcessor
+import com.crowdproj.resources.common.ResourcesContext
+import com.crowdproj.resources.common.models.*
+import com.crowdproj.resources.common.stubs.ResourcesStubs
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import ru.otus.otuskotlin.marketplace.biz.ResourcesProcessor
-import ru.otus.otuskotlin.marketplace.common.ResourcesContext
-import ru.otus.otuskotlin.marketplace.common.models.*
-import ru.otus.otuskotlin.marketplace.common.stubs.ResourcesStubs
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class ResourceUpdateStubTest {
 
     private val processor = ResourcesProcessor()
-    private val id = ResourcesId("777")
-    private val resourcesId = OtherResourcesId("1122")
-    private val scheduleId = ScheduleId("3333")
-    private val visible = ResourcesVisible.VISIBLE_PUBLIC
+    val id = ResourcesId("777")
+    val resourcesId = OtherResourcesId("resourcesId 777")
+    val scheduleId = ScheduleId("scheduleId 777")
+    val visible = ResourcesVisible.VISIBLE_PUBLIC
 
     @Test
     fun create() = runTest {
@@ -54,7 +56,7 @@ class ResourceUpdateStubTest {
     }
 
     @Test
-    fun badOtherId() = runTest {
+    fun badOtherResourcesId() = runTest {
         val ctx = ResourcesContext(
             command = ResourcesCommand.UPDATE,
             state = ResourcesState.NONE,
@@ -88,14 +90,14 @@ class ResourceUpdateStubTest {
         )
         processor.exec(ctx)
         assertEquals(Resources(), ctx.resourceResponse)
-        assertEquals("scheduleId", ctx.errors.firstOrNull()?.field)
+        assertEquals("resourcesId", ctx.errors.firstOrNull()?.field)
         assertEquals("validation", ctx.errors.firstOrNull()?.group)
     }
 
     @Test
     fun databaseError() = runTest {
         val ctx = ResourcesContext(
-            command = ResourcesCommand.UPDATE,
+            command = ResourcesCommand.CREATE,
             state = ResourcesState.NONE,
             workMode = ResourcesWorkMode.STUB,
             stubCase = ResourcesStubs.DB_ERROR,
@@ -111,7 +113,7 @@ class ResourceUpdateStubTest {
     @Test
     fun badNoCase() = runTest {
         val ctx = ResourcesContext(
-            command = ResourcesCommand.UPDATE,
+            command = ResourcesCommand.CREATE,
             state = ResourcesState.NONE,
             workMode = ResourcesWorkMode.STUB,
             stubCase = ResourcesStubs.BAD_SEARCH_STRING,

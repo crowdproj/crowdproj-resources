@@ -1,19 +1,19 @@
-package ru.otus.otuskotlin.marketplace.app.plugins
+package com.crowdproj.resources.plugins
 
+import com.crowdproj.resources.app.configs.ResourceAppSettings
 import io.ktor.server.application.*
 import io.ktor.server.http.content.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import ru.otus.otuskotlin.marketplace.app.ResourcesAppSettings
 
-fun Routing.swagger(appConfig: ResourcesAppSettings) {
-    get("/specs-resources-{ver}.yaml") {
+fun Routing.swagger(appSettings: ResourceAppSettings) {
+    get("/spec-resources-{ver}.yaml") {
         val ver = call.parameters["ver"]
         val origTxt: String = withContext(Dispatchers.IO) {
             this::class.java.classLoader
-                .getResource("specs/specs-resources-$ver.yaml")
+                .getResource("specs/spec-resources-$ver.yaml")
                 ?.readText()
         } ?: ""
         val response = origTxt.replace(
@@ -21,10 +21,20 @@ fun Routing.swagger(appConfig: ResourcesAppSettings) {
                 "(?<=^servers:\$\\n).*(?=\\ntags:\$)",
                 setOf(RegexOption.DOT_MATCHES_ALL, RegexOption.MULTILINE, RegexOption.IGNORE_CASE)
             ),
-            appConfig.appUrls.joinToString(separator = "\n") { "  - url: $it$ver" }
+            appSettings.appUrls.joinToString(separator = "\n") { "  - url: $it$ver" }
         )
         call.respondText { response }
     }
+
+    get("/build/base.yaml") {
+        val origTxt: String = withContext(Dispatchers.IO) {
+            this::class.java.classLoader
+                .getResource("specs/base.yaml")
+                ?.readText()
+        } ?: ""
+        call.respondText { origTxt }
+    }
+
 
     static("/") {
         preCompressed {

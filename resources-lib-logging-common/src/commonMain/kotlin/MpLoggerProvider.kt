@@ -1,4 +1,4 @@
-package ru.otus.otuskotlin.marketplace.logging.common
+package com.crowdproj.resources.logging.common
 
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction

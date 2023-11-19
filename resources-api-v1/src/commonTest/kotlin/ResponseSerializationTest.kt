@@ -18,7 +18,9 @@ class ResponseSerializationTest {
 
     @Test
     fun serialize() {
-        val json = apiV1Mapper.writeValueAsString(response)
+        val json = encodeResponse(response)
+
+        println(json)
 
         assertContains(json, Regex("\"resourceId\":\\s*\"1111\""))
         assertContains(json, Regex("\"responseType\":\\s*\"create\""))
@@ -26,8 +28,8 @@ class ResponseSerializationTest {
 
     @Test
     fun deserialize() {
-        val json = apiV1Mapper.writeValueAsString(response)
-        val obj = apiV1Mapper.readValue(json, IResponse::class.java) as ResourceCreateResponse
+        val json = encodeResponse(response)
+        val obj = decodeResponse(json) as ResourceCreateResponse
 
         assertEquals(response, obj)
     }

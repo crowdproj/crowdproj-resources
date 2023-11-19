@@ -1,21 +1,23 @@
-package ru.otus.otuskotlin.marketplace.biz.stub
+package com.crowdproj.resources.biz.stub
 
+import com.crowdproj.resources.biz.ResourcesProcessor
+import com.crowdproj.resources.common.ResourcesContext
+import com.crowdproj.resources.common.models.*
+import com.crowdproj.resources.common.stubs.ResourcesStubs
+import com.crowdproj.resources.stubs.CpwResourceStub
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import ru.otus.otuskotlin.marketplace.biz.ResourcesProcessor
-import ru.otus.otuskotlin.marketplace.common.ResourcesContext
-import ru.otus.otuskotlin.marketplace.common.models.*
-import ru.otus.otuskotlin.marketplace.common.stubs.ResourcesStubs
-import ru.otus.otuskotlin.marketplace.stubs.ResourcesStub
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class ResourceCreateStubTest {
 
     private val processor = ResourcesProcessor()
-    private val id = ResourcesId("666")
-    private val resourcesId = OtherResourcesId("1122")
-    private val scheduleId = ScheduleId("3333")
-    private val visible = ResourcesVisible.VISIBLE_PUBLIC
+    val id = ResourcesId("666")
+    val resourcesId = OtherResourcesId("resourcesId 666")
+    val scheduleId = ScheduleId("scheduleId 666")
+    val visible = ResourcesVisible.VISIBLE_PUBLIC
 
     @Test
     fun create() = runTest {
@@ -33,14 +35,14 @@ class ResourceCreateStubTest {
             ),
         )
         processor.exec(ctx)
-        assertEquals(ResourcesStub.get().id, ctx.resourceResponse.id)
+        assertEquals(CpwResourceStub.get().id, ctx.resourceResponse.id)
         assertEquals(resourcesId, ctx.resourceResponse.resourcesId)
         assertEquals(scheduleId, ctx.resourceResponse.scheduleId)
         assertEquals(visible, ctx.resourceResponse.visible)
     }
 
     @Test
-    fun badOtherId() = runTest {
+    fun badOtherResourcesId() = runTest {
         val ctx = ResourcesContext(
             command = ResourcesCommand.CREATE,
             state = ResourcesState.NONE,
@@ -100,7 +102,7 @@ class ResourceCreateStubTest {
             command = ResourcesCommand.CREATE,
             state = ResourcesState.NONE,
             workMode = ResourcesWorkMode.STUB,
-            stubCase = ResourcesStubs.BAD_SEARCH_STRING,
+            stubCase = ResourcesStubs.BAD_ID,
             resourceRequest = Resources(
                 id = id,
                 resourcesId = resourcesId,

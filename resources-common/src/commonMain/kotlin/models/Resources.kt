@@ -1,4 +1,4 @@
-package ru.otus.otuskotlin.marketplace.common.models
+package com.crowdproj.resources.common.models
 
 data class Resources(
     var id: ResourcesId = ResourcesId.NONE,
@@ -7,10 +7,16 @@ data class Resources(
     var ownerId: ResourcesUserId = ResourcesUserId.NONE,
     var deleted: Boolean = false,
     var visible: ResourcesVisible = ResourcesVisible.NONE,
+    var lock: ResourcesLock = ResourcesLock.NONE,
     val permissionsClient: MutableSet<ResourcesPermissionClient> = mutableSetOf()
 ) {
+    fun isEmpty() = this == NONE
     fun deepCopy(): Resources = copy(
-        permissionsClient = permissionsClient.toMutableSet(),
+        permissionsClient = permissionsClient.toMutableSet()
     )
+
+    companion object {
+        private val NONE = Resources()
+    }
 
 }

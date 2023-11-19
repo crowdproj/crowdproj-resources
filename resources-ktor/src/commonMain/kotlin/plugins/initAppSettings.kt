@@ -1,18 +1,23 @@
-package ru.otus.otuskotlin.marketplace.app.plugins
+package com.crowdproj.resources.app.plugins
 
+import com.crowdproj.resources.app.configs.ResourceAppSettings
+import com.crowdproj.resources.biz.ResourcesProcessor
+import com.crowdproj.resources.common.ResourcesCorSettings
+import com.crowdproj.resources.logging.common.MpLoggerProvider
 import io.ktor.server.application.*
-import ru.otus.otuskotlin.marketplace.app.ResourcesAppSettings
-import ru.otus.otuskotlin.marketplace.biz.ResourcesProcessor
-import ru.otus.otuskotlin.marketplace.common.ResourcesCorSettings
+import ru.otus.otuskotlin.marketplace.backend.repository.inmemory.ResourceRepoStub
 
-
-fun Application.initAppSettings(): ResourcesAppSettings {
-    val corSettings = ResourcesCorSettings(
-        loggerProvider = getLoggerProviderConf()
-    )
-    return ResourcesAppSettings(
-        appUrls = environment.config.propertyOrNull("ktor.urls")?.getList() ?: emptyList(),
-        corSettings = corSettings,
-        processor = ResourcesProcessor(corSettings),
+fun Application.initAppSettings(): ResourceAppSettings {
+    return ResourceAppSettings(
+        appUrls = environment.config.propertyOrNull("ktor.urls")?.getList()?.filter { it.isNotBlank() }?: emptyList(),
+        corSettings = ResourcesCorSettings(
+            loggerProvider = getLoggerProviderConf(),
+            repoTest = getDatabaseConf(ResDbType.TEST),
+            repoProd = getDatabaseConf(ResDbType.PROD),
+            repoStub = ResourceRepoStub(),
+        ),
+        processor = ResourcesProcessor(),
     )
 }
+
+expect fun Application.getLoggerProviderConf(): MpLoggerProvider

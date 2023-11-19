@@ -1,11 +1,11 @@
-package ru.otus.otuskotlin.marketplace.biz.validation
+package com.crowdproj.resources.biz.validation
 
-import ru.otus.otuskotlin.marketplace.common.ResourcesContext
-import ru.otus.otuskotlin.marketplace.common.models.ResourcesState
-import ru.otus.otuskotlin.marketplace.cor.ICorChainDsl
-import ru.otus.otuskotlin.marketplace.cor.chain
+import com.crowdproj.resources.common.ResourcesContext
+import com.crowdproj.resources.common.models.ResourcesState
+import com.crowdproj.kotlin.cor.ICorAddExecDsl
+import com.crowdproj.kotlin.cor.handlers.chain
 
-fun ICorChainDsl<ResourcesContext>.validation(block: ICorChainDsl<ResourcesContext>.() -> Unit) = chain {
+fun ICorAddExecDsl<ResourcesContext>.validation(block: ICorAddExecDsl<ResourcesContext>.() -> Unit) = chain {
     block()
     title = "Валидация"
 

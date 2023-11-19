@@ -1,11 +1,11 @@
-package ru.otus.otuskotlin.marketplace.biz.validation
+package com.crowdproj.resources.biz.validation
 
-import ru.otus.otuskotlin.marketplace.common.ResourcesContext
-import ru.otus.otuskotlin.marketplace.common.models.ResourcesState
-import ru.otus.otuskotlin.marketplace.cor.ICorChainDsl
-import ru.otus.otuskotlin.marketplace.cor.worker
+import com.crowdproj.resources.common.ResourcesContext
+import com.crowdproj.resources.common.models.ResourcesState
+import com.crowdproj.kotlin.cor.ICorAddExecDsl
+import com.crowdproj.kotlin.cor.handlers.worker
 
-fun ICorChainDsl<ResourcesContext>.finishAdValidation(title: String) = worker {
+fun ICorAddExecDsl<ResourcesContext>.finishAdValidation(title: String) = worker {
     this.title = title
     on { state == ResourcesState.RUNNING }
     handle {
@@ -13,7 +13,7 @@ fun ICorChainDsl<ResourcesContext>.finishAdValidation(title: String) = worker {
     }
 }
 
-fun ICorChainDsl<ResourcesContext>.finishAdFilterValidation(title: String) = worker {
+fun ICorAddExecDsl<ResourcesContext>.finishAdFilterValidation(title: String) = worker {
     this.title = title
     on { state == ResourcesState.RUNNING }
     handle {

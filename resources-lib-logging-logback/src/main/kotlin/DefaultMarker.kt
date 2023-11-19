@@ -1,4 +1,4 @@
-package ru.otus.otuskotlin.marketplace.logging.jvm
+package com.crowdproj.resources.logging.logback
 
 import org.slf4j.Marker
 

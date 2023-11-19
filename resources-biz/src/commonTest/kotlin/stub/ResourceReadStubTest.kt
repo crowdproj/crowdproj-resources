@@ -1,18 +1,20 @@
-package ru.otus.otuskotlin.marketplace.biz.stub.stub
+package com.crowdproj.resources.biz.stub
 
+import com.crowdproj.resources.biz.ResourcesProcessor
+import com.crowdproj.resources.common.ResourcesContext
+import com.crowdproj.resources.common.models.*
+import com.crowdproj.resources.common.stubs.ResourcesStubs
+import com.crowdproj.resources.stubs.CpwResourceStub
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import ru.otus.otuskotlin.marketplace.biz.ResourcesProcessor
-import ru.otus.otuskotlin.marketplace.common.ResourcesContext
-import ru.otus.otuskotlin.marketplace.common.models.*
-import ru.otus.otuskotlin.marketplace.common.stubs.ResourcesStubs
-import ru.otus.otuskotlin.marketplace.stubs.ResourcesStub
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class ResourceReadStubTest {
 
     private val processor = ResourcesProcessor()
-    private val id = ResourcesId("666")
+    val id = ResourcesId("666")
 
     @Test
     fun read() = runTest {
@@ -27,7 +29,7 @@ class ResourceReadStubTest {
             ),
         )
         processor.exec(ctx)
-        with (ResourcesStub.get()) {
+        with (CpwResourceStub.get()) {
             assertEquals(id, ctx.resourceResponse.id)
             assertEquals(resourcesId, ctx.resourceResponse.resourcesId)
             assertEquals(scheduleId, ctx.resourceResponse.scheduleId)
@@ -72,7 +74,7 @@ class ResourceReadStubTest {
             command = ResourcesCommand.READ,
             state = ResourcesState.NONE,
             workMode = ResourcesWorkMode.STUB,
-            stubCase = ResourcesStubs.BAD_SEARCH_STRING,
+            stubCase = ResourcesStubs.BAD_ID,
             resourceRequest = Resources(
                 id = id,
             ),

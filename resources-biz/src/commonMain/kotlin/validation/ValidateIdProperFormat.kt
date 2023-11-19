@@ -1,13 +1,13 @@
-package ru.otus.otuskotlin.marketplace.biz.validation
+package com.crowdproj.resources.biz.validation
 
-import ru.otus.otuskotlin.marketplace.cor.ICorChainDsl
-import ru.otus.otuskotlin.marketplace.cor.worker
-import ru.otus.otuskotlin.marketplace.common.helpers.errorValidation
-import ru.otus.otuskotlin.marketplace.common.ResourcesContext
-import ru.otus.otuskotlin.marketplace.common.helpers.fail
-import ru.otus.otuskotlin.marketplace.common.models.ResourcesId
+import com.crowdproj.resources.common.ResourcesContext
+import com.crowdproj.resources.common.models.ResourcesId
+import com.crowdproj.kotlin.cor.ICorAddExecDsl
+import com.crowdproj.kotlin.cor.handlers.worker
+import com.crowdproj.resources.common.helpers.errorValidation
+import com.crowdproj.resources.common.helpers.fail
 
-fun ICorChainDsl<ResourcesContext>.validateIdProperFormat(title: String) = worker {
+fun ICorAddExecDsl<ResourcesContext>.validateIdProperFormat(title: String) = worker {
     this.title = title
 
     // Может быть вынесен в ResourcesId для реализации различных форматов

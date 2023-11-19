@@ -1,54 +1,52 @@
-package ru.otus.otuskotlin.marketplace.app
+package com.crowdproj.resources
 
-import io.ktor.serialization.jackson.*
+import com.crowdproj.resources.app.configs.ResourceAppSettings
+import com.crowdproj.resources.app.controller.v1ProductProperty
+import com.crowdproj.resources.app.controller.wsHandlerV1
+import com.crowdproj.resources.app.plugins.initAppSettings
+import com.crowdproj.resources.app.plugins.initPlugins
+import com.crowdproj.resources.logging.logback.CwpLogWrapperLogback
+import com.crowdproj.resources.plugins.swagger
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
+import io.ktor.server.cio.*
 import io.ktor.server.http.content.*
 import io.ktor.server.plugins.callloging.*
 import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import org.slf4j.event.Level
-import ru.otus.otuskotlin.marketplace.api.v1.apiV1Mapper
-import ru.otus.otuskotlin.marketplace.app.plugins.initAppSettings
-import ru.otus.otuskotlin.marketplace.app.plugins.swagger
-import ru.otus.otuskotlin.marketplace.app.v1.v1Resources
-import ru.otus.otuskotlin.marketplace.app.v1.wsHandlerV1
-import ru.otus.otuskotlin.marketplace.logging.jvm.MpLogWrapperLogback
 
 private val clazz = Application::moduleJvm::class.qualifiedName ?: "Application"
-@Suppress("unused")
-// Referenced in application.conf_
-fun Application.moduleJvm(appSettings: ResourcesAppSettings = initAppSettings()) {
-    module(appSettings)
+
+fun main(args: Array<String>) = EngineMain.main(args)
+
+@Suppress("unused") // Referenced in application.yaml
+fun Application.moduleJvm(
+    appSettings: ResourceAppSettings = initAppSettings(),
+) {
+    initPlugins(appSettings)
 
     install(CallLogging) {
         level = Level.INFO
         val lgr = appSettings
             .corSettings
             .loggerProvider
-            .logger(clazz) as? MpLogWrapperLogback
+            .logger(clazz) as? CwpLogWrapperLogback
         lgr?.logger?.also { logger = it }
     }
+    install(DefaultHeaders)
 
     routing {
         route("v1") {
-            install(ContentNegotiation) {
-                jackson {
-                    setConfig(apiV1Mapper.serializationConfig)
-                    setConfig(apiV1Mapper.deserializationConfig)
-                }
+            authenticate("auth-jwt") {
+                v1ProductProperty(appSettings)
             }
-
-            v1Resources(appSettings)
-        }
-
-        webSocket("/ws/v1") {
-            wsHandlerV1(appSettings)
+            webSocket("ws") {
+                wsHandlerV1(appSettings)
+            }
         }
         swagger(appSettings)
-        static("static") {
-            resources("static")
-        }
     }
 }
-

@@ -2,7 +2,6 @@ plugins {
     kotlin("multiplatform")
 }
 
-group = rootProject.group
 version = rootProject.version
 
 kotlin {
@@ -12,7 +11,6 @@ kotlin {
     sourceSets {
         val datetimeVersion: String by project
 
-        @Suppress("UNUSED_VARIABLE")
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
@@ -20,9 +18,9 @@ kotlin {
                 api(project(":resources-lib-logging-common"))
 
                 api("org.jetbrains.kotlinx:kotlinx-datetime:$datetimeVersion")
+                api(project(":resources-lib-logging-common"))
             }
         }
-        @Suppress("UNUSED_VARIABLE")
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test-common"))

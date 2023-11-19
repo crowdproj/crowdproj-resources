@@ -1,21 +1,20 @@
-package ru.otus.otuskotlin.marketplace.biz.validation
+package com.crowdproj.resources.biz.validation
 
-import ru.otus.otuskotlin.marketplace.cor.ICorChainDsl
-import ru.otus.otuskotlin.marketplace.cor.worker
-import ru.otus.otuskotlin.marketplace.common.helpers.errorValidation
-import ru.otus.otuskotlin.marketplace.common.ResourcesContext
-import ru.otus.otuskotlin.marketplace.common.helpers.fail
-import ru.otus.otuskotlin.marketplace.common.models.ScheduleId
+import com.crowdproj.resources.common.ResourcesContext
+import com.crowdproj.kotlin.cor.ICorAddExecDsl
+import com.crowdproj.kotlin.cor.handlers.worker
+import com.crowdproj.resources.common.helpers.errorValidation
+import com.crowdproj.resources.common.helpers.fail
 
-fun ICorChainDsl<ResourcesContext>.validateScheduleIdNotEmpty(title: String) = worker {
+fun ICorAddExecDsl<ResourcesContext>.validateScheduleIdNotEmpty(title: String) = worker {
     this.title = title
-    on { resourceValidating.scheduleId == ScheduleId.NONE || resourceValidating.scheduleId.asString() == "" }
+    on { resourceValidating.scheduleId.asString().isEmpty() }
     handle {
         fail(
             errorValidation(
-                field = "ScheduleId",
-                violationCode = "noContent",
-                description = "field must be filled in"
+                field = "scheduleId",
+                violationCode = "empty",
+                description = "field must not be empty"
             )
         )
     }

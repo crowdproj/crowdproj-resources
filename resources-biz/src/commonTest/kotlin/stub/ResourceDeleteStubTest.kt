@@ -1,18 +1,20 @@
-package ru.otus.otuskotlin.marketplace.biz.stub.stub
+package com.crowdproj.resources.biz.stub
 
+import com.crowdproj.resources.biz.ResourcesProcessor
+import com.crowdproj.resources.common.ResourcesContext
+import com.crowdproj.resources.common.models.*
+import com.crowdproj.resources.common.stubs.ResourcesStubs
+import com.crowdproj.resources.stubs.CpwResourceStub
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import ru.otus.otuskotlin.marketplace.biz.ResourcesProcessor
-import ru.otus.otuskotlin.marketplace.common.ResourcesContext
-import ru.otus.otuskotlin.marketplace.common.models.*
-import ru.otus.otuskotlin.marketplace.common.stubs.ResourcesStubs
-import ru.otus.otuskotlin.marketplace.stubs.ResourcesStub
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class ResourceDeleteStubTest {
 
     private val processor = ResourcesProcessor()
-    private val id = ResourcesId("666")
+    val id = ResourcesId("666")
 
     @Test
     fun delete() = runTest {
@@ -28,7 +30,7 @@ class ResourceDeleteStubTest {
         )
         processor.exec(ctx)
 
-        val stub = ResourcesStub.get()
+        val stub = CpwResourceStub.get()
         assertEquals(stub.id, ctx.resourceResponse.id)
         assertEquals(stub.resourcesId, ctx.resourceResponse.resourcesId)
         assertEquals(stub.scheduleId, ctx.resourceResponse.scheduleId)
@@ -72,7 +74,7 @@ class ResourceDeleteStubTest {
             command = ResourcesCommand.DELETE,
             state = ResourcesState.NONE,
             workMode = ResourcesWorkMode.STUB,
-            stubCase = ResourcesStubs.BAD_SEARCH_STRING,
+            stubCase = ResourcesStubs.CANNOT_DELETE,
             resourceRequest = Resources(
                 id = id,
             ),

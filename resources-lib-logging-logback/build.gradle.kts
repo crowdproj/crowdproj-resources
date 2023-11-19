@@ -2,7 +2,6 @@ plugins {
     kotlin("jvm")
 }
 
-group = rootProject.group
 version = rootProject.version
 
 dependencies {
@@ -21,7 +20,6 @@ dependencies {
 
     // logback
     implementation("net.logstash.logback:logstash-logback-encoder:$logbackEncoderVersion")
-//    implementation("com.github.danielwegener:logback-kafka-appender:$logbackKafkaVersion")
     implementation("org.codehaus.janino:janino:$janinoVersion")
     api("ch.qos.logback:logback-classic:$logbackVersion")
 

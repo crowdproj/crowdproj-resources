@@ -1,5 +1,4 @@
-package ru.otus.otuskotlin.marketplace.logging.common
-
+package com.crowdproj.resources.logging.common
 enum class LogLevel(
     private val levelInt: Int,
     private val levelStr: String,

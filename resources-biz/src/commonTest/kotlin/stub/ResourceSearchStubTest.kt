@@ -1,20 +1,22 @@
-package ru.otus.otuskotlin.marketplace.biz.stub.stub
+package com.crowdproj.resources.biz.stub
 
+import com.crowdproj.resources.biz.ResourcesProcessor
+import com.crowdproj.resources.common.ResourcesContext
+import com.crowdproj.resources.common.models.*
+import com.crowdproj.resources.common.stubs.ResourcesStubs
+import com.crowdproj.resources.stubs.CpwResourceStub
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
-import ru.otus.otuskotlin.marketplace.biz.ResourcesProcessor
-import ru.otus.otuskotlin.marketplace.common.ResourcesContext
-import ru.otus.otuskotlin.marketplace.common.models.*
-import ru.otus.otuskotlin.marketplace.common.stubs.ResourcesStubs
-import ru.otus.otuskotlin.marketplace.stubs.ResourcesStub
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlin.test.fail
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class ResourceSearchStubTest {
 
     private val processor = ResourcesProcessor()
-    private val filter = ResourcesFilter(searchString = "1111")
+    val filter = ResourcesFilter(searchString = "bolt")
 
     @Test
     fun read() = runTest {
@@ -29,9 +31,9 @@ class ResourceSearchStubTest {
         processor.exec(ctx)
         assertTrue(ctx.resourcesResponse.size > 1)
         val first = ctx.resourcesResponse.firstOrNull() ?: fail("Empty response list")
-        assertTrue(first.resourcesId.toString().contains(filter.searchString))
-        assertTrue(first.scheduleId.toString().contains(filter.searchString))
-        with (ResourcesStub.get()) {
+        assertTrue(first.resourcesId.asString().contains(filter.searchString))
+        with (CpwResourceStub.get()) {
+            assertEquals(resourcesId, first.resourcesId)
             assertEquals(visible, first.visible)
         }
     }
@@ -71,7 +73,7 @@ class ResourceSearchStubTest {
             command = ResourcesCommand.SEARCH,
             state = ResourcesState.NONE,
             workMode = ResourcesWorkMode.STUB,
-            stubCase = ResourcesStubs.BAD_SEARCH_STRING,
+            stubCase = ResourcesStubs.BAD_ID,
             resourceFilterRequest = filter,
         )
         processor.exec(ctx)

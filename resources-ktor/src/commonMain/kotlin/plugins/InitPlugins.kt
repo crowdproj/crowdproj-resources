@@ -1,16 +1,23 @@
-package ru.otus.otuskotlin.marketplace.app.plugins
+package com.crowdproj.resources.app.plugins
 
+import com.crowdproj.resources.app.configs.ResourceAppSettings
 import io.ktor.http.*
+import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.autohead.*
 import io.ktor.server.plugins.cachingheaders.*
+import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.plugins.cors.routing.*
-import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
-import ru.otus.otuskotlin.marketplace.app.ResourcesAppSettings
+import kotlinx.serialization.json.Json
 
-fun Application.initPlugins(appSettings: ResourcesAppSettings) {
-    install(Routing)
+fun Application.initPlugins(appSettings: ResourceAppSettings) {
+    install(ContentNegotiation) {
+        json(Json {
+            isLenient = true
+            prettyPrint = true
+        })
+    }
     install(WebSockets)
 
     install(CORS) {

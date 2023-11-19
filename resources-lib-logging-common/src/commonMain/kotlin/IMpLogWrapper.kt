@@ -1,4 +1,4 @@
-package ru.otus.otuskotlin.marketplace.logging.common
+package com.crowdproj.resources.logging.common
 
 import kotlinx.datetime.Clock
 import kotlin.time.ExperimentalTime

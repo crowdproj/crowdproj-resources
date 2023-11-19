@@ -6,11 +6,10 @@ import kotlin.test.assertContains
 import kotlin.test.assertEquals
 
 class RequestSerializationTest {
-    private val request = ResourceCreateRequest(
-        requestId = "123",
-        debug = ResourceDebug(
-            mode = ResourceRequestDebugMode.STUB,
-            stub = ResourceRequestDebugStubs.BAD_OTHER_ID
+    private val request: IRequestResource = ResourceCreateRequest(
+        debug = CpBaseDebug(
+            mode = CpRequestDebugMode.STUB,
+            stub = CpRequestDebugStubs.SUCCESS
         ),
         resource = ResourceCreateObject(
             resourceId = "1111",
@@ -22,29 +21,21 @@ class RequestSerializationTest {
 
     @Test
     fun serialize() {
-        val json = apiV1Mapper.writeValueAsString(request)
+        val json = encodeRequest(request)
+
+        println(json)
 
         assertContains(json, Regex("\"resourceId\":\\s*\"1111\""))
         assertContains(json, Regex("\"mode\":\\s*\"stub\""))
-        assertContains(json, Regex("\"stub\":\\s*\"badOtherId\""))
+        assertContains(json, Regex("\"stub\":\\s*\"success\""))
         assertContains(json, Regex("\"requestType\":\\s*\"create\""))
     }
 
     @Test
     fun deserialize() {
-        val json = apiV1Mapper.writeValueAsString(request)
-        val obj = apiV1Mapper.readValue(json, IRequest::class.java) as ResourceCreateRequest
+        val json = encodeRequest(request)
+        val obj = decodeRequest(json) as ResourceCreateRequest
 
         assertEquals(request, obj)
-    }
-
-    @Test
-    fun deserializeNaked() {
-        val jsonString = """
-            {"requestId": "123"}
-        """.trimIndent()
-        val obj = apiV1Mapper.readValue(jsonString, ResourceCreateRequest::class.java)
-
-        assertEquals("123", obj.requestId)
     }
 }
