@@ -6,14 +6,14 @@ plugins {
 
 version = rootProject.version
 
-val specDir = "${layout.buildDirectory.get()}/specs"
+val specDir = "${layout.buildDirectory.get()}"
 val apiVersion = "v1"
 val apiSpec: Configuration by configurations.creating
 val apiSpecVersion: String by project
 dependencies {
     apiSpec(
         group = "com.crowdproj",
-        name = "specs-v1",
+        name = "specs-v0",
         version = apiSpecVersion,
         classifier = "openapi",
         ext = "yaml"
@@ -55,25 +55,37 @@ kotlin {
 }
 
 
-tasks {
-    val getSpecs: Task by creating(Copy::class) {
-        group = "openapi tools"
-        from("${rootProject.projectDir}/specs")
-        from(apiSpec) {
+crowdprojGenerate {
+    packageName.set("${project.group}.api.v1")
+    inputSpec.set("${project.buildDir}/specs-resources-$apiVersion.yaml")
+}
+
+val getSpecs: Task by tasks.creating {
+    doFirst {
+        copy {
+            from("${rootProject.projectDir}/specs")
+            into(project.buildDir.toString())
+        }
+        copy {
+            from(apiSpec.asPath)
+            into("$buildDir")
             rename { "base.yaml" }
         }
-        into(specDir)
-    }
-    this.openApiGenerate {
-        dependsOn(getSpecs)
-        mustRunAfter("compileCommonMainKotlinMetadata")
-    }
-    filter { it.name.startsWith("compile") }.forEach {
-        it.dependsOn(openApiGenerate)
     }
 }
 
-crowdprojGenerate {
-    packageName.set("${project.group}.api.v1")
-    inputSpec.set("${specDir}/specs-resources-$apiVersion.yaml")
+tasks {
+    this.openApiGenerate {
+        dependsOn(getSpecs)
+    }
+}
+
+afterEvaluate {
+    val openApiGenerate = tasks.getByName("openApiGenerate")
+    tasks.filter { it.name.startsWith("compile") }.forEach {
+        it.dependsOn(openApiGenerate)
+    }
+    tasks.filter { it.name.endsWith("Elements") }.forEach {
+        it.dependsOn(openApiGenerate)
+    }
 }

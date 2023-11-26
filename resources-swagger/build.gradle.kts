@@ -62,14 +62,14 @@ tasks {
         destinationDir = file("${layout.buildDirectory.get()}/swagger")
 //    dependsOn(apiSpec.asPath)
         from("$rootDir/specs") {
-            into("specs")
+            into("")
             filter {
                 // Устанавливаем версию в сваггере
                 it.replace("\${VERSION_APP}", project.version.toString())
             }
         }
         from(apiSpec) {
-            into("specs")
+            into("")
             rename { "base.yaml" }
         }
         outputs.dir(destinationDir)

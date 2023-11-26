@@ -52,6 +52,6 @@ suspend fun ApplicationCall.searchResource(
 ) = processV1<ResourceSearchRequest, ResourceSearchResponse>(
     appSettings,
     loggerProductProperty,
-    "product-property-search",
+    "resource-search",
     ResourcesCommand.SEARCH
 )

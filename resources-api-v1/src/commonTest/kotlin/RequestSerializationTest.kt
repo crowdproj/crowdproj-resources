@@ -7,6 +7,7 @@ import kotlin.test.assertEquals
 
 class RequestSerializationTest {
     private val request: IRequestResource = ResourceCreateRequest(
+        requestId = "123",
         debug = CpBaseDebug(
             mode = CpRequestDebugMode.STUB,
             stub = CpRequestDebugStubs.SUCCESS

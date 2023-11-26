@@ -1,4 +1,4 @@
-package com.crowdproj.resources.plugins
+package com.crowdproj.resources.app.plugins
 
 import com.crowdproj.resources.app.configs.ResourceAppSettings
 import io.ktor.server.application.*
@@ -9,11 +9,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 fun Routing.swagger(appSettings: ResourceAppSettings) {
-    get("/spec-resources-{ver}.yaml") {
+    get("/specs-resources-{ver}.yaml") {
         val ver = call.parameters["ver"]
         val origTxt: String = withContext(Dispatchers.IO) {
             this::class.java.classLoader
-                .getResource("specs/spec-resources-$ver.yaml")
+                .getResource("specs/specs-resources-$ver.yaml")
                 ?.readText()
         } ?: ""
         val response = origTxt.replace(

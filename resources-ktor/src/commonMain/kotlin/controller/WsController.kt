@@ -52,15 +52,15 @@ suspend fun WebSocketSession.wsHandlerV1(appSettings: ResourceAppSettings) {
 
                 appSettings.processor.exec(context)
 
-                val result = context.toApi()?.let { it1 -> encodeResponse(it1) }
+                val result = encodeResponse(context.toApi())
 
                 // If change request, response is sent to everyone
                 if (context.isUpdatableCommand()) {
                     sessions.forEach {
-                        result?.let { it1 -> Frame.Text(it1) }?.let { it2 -> it.send(it2) }
+                        result.let { it1 -> Frame.Text(it1) }.let { it2 -> it.send(it2) }
                     }
                 } else {
-                    result?.let { it1 -> Frame.Text(it1) }?.let { it2 -> outgoing.send(it2) }
+                    result.let { it1 -> Frame.Text(it1) }.let { it2 -> outgoing.send(it2) }
                 }
 
                 logger.info(

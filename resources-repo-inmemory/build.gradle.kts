@@ -16,6 +16,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(project(":resources-common"))
+                implementation(project(":resources-repo-tests"))
 
                 implementation("io.github.reactivecircus.cache4k:cache4k:$cache4kVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")

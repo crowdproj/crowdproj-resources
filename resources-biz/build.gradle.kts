@@ -30,7 +30,7 @@ kotlin {
                 implementation(kotlin("test-annotations-common"))
 
                 implementation(project(":resources-repo-stubs"))
-//                implementation(project(":resources-repo-tests"))
+                implementation(project(":resources-repo-tests"))
                 implementation(project(":resources-repo-inmemory"))
 
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
