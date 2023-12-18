@@ -22,6 +22,7 @@ kotlin {
 
                 implementation(project(":resources-common"))
                 implementation(project(":resources-stubs"))
+                implementation(project(":resources-auth"))
             }
         }
         val commonTest by getting {

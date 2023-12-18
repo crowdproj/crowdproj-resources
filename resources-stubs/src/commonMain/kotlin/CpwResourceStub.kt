@@ -1,6 +1,7 @@
 package com.crowdproj.resources.stubs
 
 import com.crowdproj.resources.common.models.*
+import com.crowdproj.resources.common.permissions.ResourcesPermissionClient
 
 object CpwResourceStub {
     fun get() = Resources(
@@ -13,9 +14,7 @@ object CpwResourceStub {
             ResourcesPermissionClient.READ,
             ResourcesPermissionClient.UPDATE,
             ResourcesPermissionClient.DELETE,
-            ResourcesPermissionClient.MAKE_VISIBLE_PUBLIC,
-            ResourcesPermissionClient.MAKE_VISIBLE_GROUP,
-            ResourcesPermissionClient.MAKE_VISIBLE_OWNER,
+            ResourcesPermissionClient.SEARCH
         )
     )
 

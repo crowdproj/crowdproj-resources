@@ -22,7 +22,15 @@ resources:
     prod: "psql"
     # prod: cassandra
     psql:
+      user: "postgres"
       password: "postgres"
       schema: "resources"
-      url: "jdbc:postgresql://localhost:5432/resources"
-      user: "postgres"
+      url: "jdbc:postgresql://127.0.0.1:5433/resources"
+
+jwt:
+  secret: "secret"
+  issuer: "http://localhost:8081/auth/realms/crowdproj"
+  audience: "ad-users"
+  realm: "crowdproj-marketplace"
+  clientId: "resources-service"
+  certUrl: "http://localhost:8081/auth/realms/crowdproj/protocol/openid-connect/certs"

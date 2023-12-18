@@ -20,12 +20,12 @@ services:
       retries: 5
 
   app:
-    image: "resources-ktor:0.0.1"
-    container_name: app-ktor
+    image: resources-ktor:0.0.1
+    container_name: resources-ktor
     ports:
       - "8080:8080"
-    #    expose:
-    #      - "8080"
+    expose:
+      - "8080"
     environment:
       DB_TYPE_PROD: psql
       SQL_URL: jdbc:postgresql://psql:5432/resources

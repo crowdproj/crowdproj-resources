@@ -1,7 +1,7 @@
 package com.crowdproj.resources.repo.sql
 
 data class SqlProperties(
-    val url: String = "jdbc:postgresql://localhost:5432/resources",
+    val url: String = "jdbc:postgresql://localhost:5433/resources",
     val user: String = "postgres",
     val password: String = "postgres",
     val schema: String = "resources",

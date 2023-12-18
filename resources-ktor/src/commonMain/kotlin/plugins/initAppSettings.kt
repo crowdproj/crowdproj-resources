@@ -1,5 +1,6 @@
 package com.crowdproj.resources.app.plugins
 
+import com.crowdproj.resources.app.base.KtorAuthConfig
 import com.crowdproj.resources.app.configs.ResourceAppSettings
 import com.crowdproj.resources.biz.ResourcesProcessor
 import com.crowdproj.resources.common.ResourcesCorSettings
@@ -16,5 +17,15 @@ fun Application.initAppSettings(): ResourceAppSettings {
             repoStub = ResourceRepoStub(),
         ),
         processor = ResourcesProcessor(),
+        auth = initAppAuth()
     )
 }
+
+private fun Application.initAppAuth(): KtorAuthConfig = KtorAuthConfig(
+    secret = environment.config.propertyOrNull("jwt.secret")?.getString() ?: "",
+    issuer = environment.config.property("jwt.issuer").getString(),
+    audience = environment.config.property("jwt.audience").getString(),
+    realm = environment.config.property("jwt.realm").getString(),
+    clientId = environment.config.property("jwt.clientId").getString(),
+    certUrl = environment.config.propertyOrNull("jwt.certUrl")?.getString(),
+)
