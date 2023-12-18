@@ -23,10 +23,9 @@ suspend inline fun <reified Rq : IRequestResource, reified Rs : IResponseResourc
     logId: String,
     command: ResourcesCommand? = null,
 ) {
-    val ctx = ResourcesContext(
-        timeStart = Clock.System.now(),
-    )
+    val ctx = ResourcesContext(timeStart = Clock.System.now())
     val processor = appSettings.processor
+
     try {
         logger.doWithLogging(id = logId) {
             ctx.principal = getPrincipal(appSettings)

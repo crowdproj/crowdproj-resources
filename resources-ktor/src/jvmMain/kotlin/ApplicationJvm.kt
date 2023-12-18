@@ -4,7 +4,7 @@ import com.auth0.jwt.JWT
 import com.crowdproj.resources.app.base.KtorAuthConfig.Companion.GROUPS_CLAIM
 import com.crowdproj.resources.app.base.resolveAlgorithm
 import com.crowdproj.resources.app.configs.ResourceAppSettings
-import com.crowdproj.resources.app.controller.v1ProductProperty
+import com.crowdproj.resources.app.controller.v1Resources
 import com.crowdproj.resources.app.controller.wsHandlerV1
 import com.crowdproj.resources.app.plugins.initAppSettings
 import com.crowdproj.resources.app.plugins.initPlugins
@@ -71,7 +71,7 @@ fun Application.moduleJvm(
     routing {
         route("v1") {
             authenticate("auth-jwt") {
-                v1ProductProperty(appSettings)
+                v1Resources(appSettings)
             }
             webSocket("ws") {
                 wsHandlerV1(appSettings)

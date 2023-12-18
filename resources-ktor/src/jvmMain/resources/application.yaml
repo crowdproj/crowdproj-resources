@@ -18,8 +18,8 @@ ktor:
 
 resources:
   repository:
-    test: "inmemory"
-    prod: "psql"
+    test: "$DB_TYPE_TEST:inmemory"
+    prod: "$DB_TYPE_PROD:psql"
     # prod: cassandra
     psql:
       user: "postgres"
@@ -29,8 +29,8 @@ resources:
 
 jwt:
   secret: "secret"
-  issuer: "http://localhost:8081/auth/realms/crowdproj"
+  issuer: "http://localhost:8081/auth/realms/crowdproj-marketplace"
   audience: "ad-users"
   realm: "crowdproj-marketplace"
   clientId: "resources-service"
-  certUrl: "http://localhost:8081/auth/realms/crowdproj/protocol/openid-connect/certs"
+  certUrl: "http://localhost:8081/auth/realms/crowdproj-marketplace/protocol/openid-connect/certs"
