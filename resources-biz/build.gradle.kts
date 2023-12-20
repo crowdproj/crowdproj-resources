@@ -21,6 +21,7 @@ kotlin {
                 implementation("com.crowdproj:kotlin-cor:$corVersion")
 
                 implementation(project(":resources-common"))
+                implementation(project(":resources-lib-logging-common"))
                 implementation(project(":resources-stubs"))
                 implementation(project(":resources-auth"))
             }
