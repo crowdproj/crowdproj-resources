@@ -74,9 +74,12 @@ kotlin {
                 implementation(project(":resources-api-v1-mappers"))
                 implementation(project(":resources-stubs"))
                 implementation(project(":resources-biz"))
+                implementation(project(":resources-repo-postgresql"))
                 implementation(project(":resources-repo-inmemory"))
+
                 implementation(project(":resources-repo-stubs"))
                 implementation(project(":resources-swagger"))
+                implementation(project(":resources-auth"))
 
             }
         }
@@ -93,7 +96,11 @@ kotlin {
                 implementation(ktor("call-logging"))
                 implementation("ch.qos.logback:logback-classic:$logbackVersion")
                 implementation(project(":resources-lib-logging-logback"))
+                implementation(ktor("auth-jwt"))
                 implementation(ktor("default-headers"))
+                implementation(project(":resources-repo-inmemory"))
+                implementation(project(":resources-repo-postgresql"))
+
             }
         }
     }
@@ -101,7 +108,7 @@ kotlin {
         @Suppress("UnstableApiUsage")
         withType<ProcessResources>().configureEach {
             println("RESOURCES: ${this.name} ${this::class}")
-            from("$rootDir/resources-api-v1/spec-resources-v1.yaml") {
+            from("$rootDir/resources-api-v1/build/specs-resources-v1.yaml") {
                 into("specs")
                 filter {
                     // Устанавливаем версию в сваггере

@@ -1,8 +1,8 @@
-package ru.otus.otuskotlin.marketplace.logging.jvm
+package com.crowdproj.resources.logging.jvm
 
 import ch.qos.logback.classic.Logger
 import org.slf4j.LoggerFactory
-import ru.otus.otuskotlin.marketplace.logging.common.IMpLogWrapper
+import com.crowdproj.resources.logging.common.IMpLogWrapper
 import kotlin.reflect.KClass
 
 /**

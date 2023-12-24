@@ -61,22 +61,22 @@ class ResourcesRepoInMemory(
     override suspend fun updateResource(rq: DbResourceRequest): DbResourceResponse {
         val key = rq.resources.id.takeIf { it != ResourcesId.NONE }?.asString() ?: return resultErrorEmptyId
         val oldLock = rq.resources.lock.takeIf { it != ResourcesLock.NONE }?.asString() ?: return resultErrorEmptyLock
-        val newAd = rq.resources.copy(lock = ResourcesLock(randomUuid()))
-        val entity = ResourceEntity(newAd)
+        val newRs = rq.resources.copy(lock = ResourcesLock(randomUuid()))
+        val entity = ResourceEntity(newRs)
         return mutex.withLock {
-            val oldAd = cache.get(key)
+            val oldRs = cache.get(key)
             when {
-                oldAd == null -> resultErrorNotFound
-                oldAd.lock != oldLock -> DbResourceResponse(
-                    data = oldAd.toInternal(),
+                oldRs == null -> resultErrorNotFound
+                oldRs.lock != oldLock -> DbResourceResponse(
+                    data = oldRs.toInternal(),
                     isSuccess = false,
-                    errors = listOf(errorRepoConcurrency(ResourcesLock(oldLock), oldAd.lock?.let { ResourcesLock(it) }))
+                    errors = listOf(errorRepoConcurrency(ResourcesLock(oldLock), oldRs.lock?.let { ResourcesLock(it) }))
                 )
 
                 else -> {
                     cache.put(key, entity)
                     DbResourceResponse(
-                        data = newAd,
+                        data = newRs,
                         isSuccess = true,
                     )
                 }
@@ -88,19 +88,19 @@ class ResourcesRepoInMemory(
         val key = rq.id.takeIf { it != ResourcesId.NONE }?.asString() ?: return resultErrorEmptyId
         val oldLock = rq.lock.takeIf { it != ResourcesLock.NONE }?.asString() ?: return resultErrorEmptyLock
         return mutex.withLock {
-            val oldAd = cache.get(key)
+            val oldRs = cache.get(key)
             when {
-                oldAd == null -> resultErrorNotFound
-                oldAd.lock != oldLock -> DbResourceResponse(
-                    data = oldAd.toInternal(),
+                oldRs == null -> resultErrorNotFound
+                oldRs.lock != oldLock -> DbResourceResponse(
+                    data = oldRs.toInternal(),
                     isSuccess = false,
-                    errors = listOf(errorRepoConcurrency(ResourcesLock(oldLock), oldAd.lock?.let { ResourcesLock(it) }))
+                    errors = listOf(errorRepoConcurrency(ResourcesLock(oldLock), oldRs.lock?.let { ResourcesLock(it) }))
                 )
 
                 else -> {
                     cache.invalidate(key)
                     DbResourceResponse(
-                        data = oldAd.toInternal(),
+                        data = oldRs.toInternal(),
                         isSuccess = true,
                     )
                 }

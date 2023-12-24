@@ -2,7 +2,7 @@
 # в этом случае необходимо сформировать application.conf
 
 ktor:
-  development: true
+#  development: true
   deployment:
     port: 8080
   watch:
@@ -10,8 +10,27 @@ ktor:
     - resources
   application:
     modules:
-      - "ru.otus.otuskotlin.marketplace.app.ApplicationJvmKt.moduleJvm"
+      - "com.crowdproj.resources.app.ApplicationJvmKt.moduleJvm"
   urls:
     - "http://127.0.0.1:8080/"
     - "http://0.0.0.0:8080/"
     - "http://192.168.0.182:8080/"
+
+resources:
+  repository:
+    test: "$DB_TYPE_TEST:inmemory"
+    prod: "$DB_TYPE_PROD:psql"
+    # prod: cassandra
+    psql:
+      user: "postgres"
+      password: "postgres"
+      schema: "resources"
+      url: "jdbc:postgresql://127.0.0.1:5433/resources"
+
+jwt:
+  secret: "secret"
+  issuer: "http://localhost:8081/auth/realms/crowdproj-marketplace"
+  audience: "ad-users"
+  realm: "crowdproj-marketplace"
+  clientId: "resources-service"
+  certUrl: "http://localhost:8081/auth/realms/crowdproj-marketplace/protocol/openid-connect/certs"

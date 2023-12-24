@@ -4,6 +4,7 @@ import com.crowdproj.resources.api.logs.mapper.toLog
 import com.crowdproj.resources.api.v1.models.IRequestResource
 import com.crowdproj.resources.api.v1.models.IResponseResource
 import com.crowdproj.resources.app.configs.ResourceAppSettings
+import com.crowdproj.resources.app.plugins.getPrincipal
 import com.crowdproj.resources.common.ResourcesContext
 import com.crowdproj.resources.common.helpers.asResourcesError
 import com.crowdproj.resources.common.models.ResourcesCommand
@@ -22,12 +23,12 @@ suspend inline fun <reified Rq : IRequestResource, reified Rs : IResponseResourc
     logId: String,
     command: ResourcesCommand? = null,
 ) {
-    val ctx = ResourcesContext(
-        timeStart = Clock.System.now(),
-    )
+    val ctx = ResourcesContext(timeStart = Clock.System.now())
     val processor = appSettings.processor
+
     try {
         logger.doWithLogging(id = logId) {
+            ctx.principal = getPrincipal(appSettings)
             val request = this.receive<Rq>()
             ctx.fromApi(request)
             logger.info(

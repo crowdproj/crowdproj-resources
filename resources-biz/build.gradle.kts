@@ -21,7 +21,9 @@ kotlin {
                 implementation("com.crowdproj:kotlin-cor:$corVersion")
 
                 implementation(project(":resources-common"))
+                implementation(project(":resources-lib-logging-common"))
                 implementation(project(":resources-stubs"))
+                implementation(project(":resources-auth"))
             }
         }
         val commonTest by getting {
@@ -30,7 +32,7 @@ kotlin {
                 implementation(kotlin("test-annotations-common"))
 
                 implementation(project(":resources-repo-stubs"))
-//                implementation(project(":resources-repo-tests"))
+                implementation(project(":resources-repo-tests"))
                 implementation(project(":resources-repo-inmemory"))
 
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")

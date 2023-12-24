@@ -1,4 +1,4 @@
-package ru.otus.otuskotlin.marketplace.logging.jvm
+package com.crowdproj.resources.logging.jvm
 
 import ch.qos.logback.classic.Logger
 import net.logstash.logback.argument.StructuredArguments
@@ -6,8 +6,9 @@ import org.slf4j.Marker
 import org.slf4j.event.KeyValuePair
 import org.slf4j.event.Level
 import org.slf4j.event.LoggingEvent
-import ru.otus.otuskotlin.marketplace.logging.common.IMpLogWrapper
-import ru.otus.otuskotlin.marketplace.logging.common.LogLevel
+import com.crowdproj.resources.logging.common.IMpLogWrapper
+import com.crowdproj.resources.logging.common.LogLevel
+import com.crowdproj.resources.logging.logback.DefaultMarker
 import java.time.Instant
 
 class MpLogWrapperLogback(

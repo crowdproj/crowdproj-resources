@@ -39,4 +39,5 @@ include("resources-swagger")
 include("resources-repo-postgresql")
 include("resources-lib-logging-common")
 include("resources-lib-logging-logback")
+include("resources-auth")
 

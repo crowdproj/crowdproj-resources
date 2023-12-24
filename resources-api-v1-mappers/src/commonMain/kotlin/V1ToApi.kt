@@ -67,7 +67,7 @@ private fun toApiResources(resource: Resources): ResourceResponseObject? = if (r
         ownerId = resource.ownerId.takeIf { it != ResourcesUserId.NONE }?.asString(),
         visible = resource.visible.toApiResourcesVisibility(),
         lock = resource.lock.takeIf { it != ResourcesLock.NONE }?.asString(),
-        permissions = resource.permissionsClient.toApiPermissions(),
+        //permissions = resource.permissionsClient.toApiPermissions(),
     )
 }
 

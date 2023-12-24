@@ -4,10 +4,9 @@ import com.crowdproj.resources.app.configs.ResourceAppSettings
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
 
-fun Route.v1ProductProperty(appSettings: ResourceAppSettings) {
-    val loggerResource = appSettings.corSettings.loggerProvider.logger(Route::v1ProductProperty)
+fun Route.v1Resources(appSettings: ResourceAppSettings) {
+    val loggerResource = appSettings.corSettings.loggerProvider.logger(Route::v1Resources::class)
 
-    route("resource") {
         post("create") {
             call.createResource(appSettings, loggerResource)
         }
@@ -23,5 +22,4 @@ fun Route.v1ProductProperty(appSettings: ResourceAppSettings) {
         post("read") {
             call.readResource(appSettings, loggerResource)
         }
-    }
 }

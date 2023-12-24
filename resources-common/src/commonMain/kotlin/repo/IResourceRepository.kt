@@ -8,26 +8,24 @@ interface IResourceRepository {
     suspend fun searchResource(rq: DbResourceFilterRequest): DbResourcesResponse
     companion object {
         val NONE = object : IResourceRepository {
-            inner class NoneRepository(): RuntimeException("Repository is not set")
-            suspend fun forbidden(): Nothing = throw NoneRepository()
             override suspend fun createResource(rq: DbResourceRequest): DbResourceResponse {
-                forbidden()
+                TODO("Not yet implemented")
             }
 
             override suspend fun readResource(rq: DbResourceIdRequest): DbResourceResponse {
-                forbidden()
+                TODO("Not yet implemented")
             }
 
             override suspend fun updateResource(rq: DbResourceRequest): DbResourceResponse {
-                forbidden()
+                TODO("Not yet implemented")
             }
 
             override suspend fun deleteResource(rq: DbResourceIdRequest): DbResourceResponse {
-                forbidden()
+                TODO("Not yet implemented")
             }
 
             override suspend fun searchResource(rq: DbResourceFilterRequest): DbResourcesResponse {
-                forbidden()
+                TODO("Not yet implemented")
             }
         }
     }

@@ -35,6 +35,7 @@ class RepoResourceSQL(
 
     init {
         transaction(conn) {
+            SchemaUtils.drop(rsTable)
             SchemaUtils.create(rsTable)
             initObjects.forEach { createResource(it) }
         }

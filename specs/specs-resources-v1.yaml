@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Crowdproj-resources
-  description: Resources for Marketplace
+  description: Resources for Crowdproj
   contact:
     name: Sergey Okatov
     email: sokatov@gmail.com
@@ -15,7 +15,7 @@ tags:
   - name: resource
     description: Ресурс (время / товар и т.д.)
 paths:
-  /v1/create:
+  /create:
     post:
       tags:
         - resource
@@ -35,7 +35,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResourceCreateResponse'
-  /v1/read:
+  /read:
     post:
       tags:
         - resource
@@ -55,7 +55,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResourceReadResponse'
-  /v1/update:
+  /update:
     post:
       tags:
         - resource
@@ -75,7 +75,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResourceUpdateResponse'
-  /v1/delete:
+  /delete:
     post:
       tags:
         - resource
@@ -95,7 +95,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResourceDeleteResponse'
-  /v1/search:
+  /search:
     post:
       tags:
         - resource

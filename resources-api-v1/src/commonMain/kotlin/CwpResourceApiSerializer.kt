@@ -4,9 +4,6 @@ import com.crowdproj.resources.api.v1.models.IRequestResource
 import com.crowdproj.resources.api.v1.models.IResponseResource
 import kotlinx.serialization.json.Json
 
-//val apiV1Mapper = Json {
-//    ignoreUnknownKeys = true
-//}
 fun encodeRequest(request: IRequestResource): String =
     Json.encodeToString(IRequestResource.serializer(), request)
 

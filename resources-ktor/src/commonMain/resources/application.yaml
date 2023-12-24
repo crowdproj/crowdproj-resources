@@ -1,13 +1,27 @@
+#  application.yaml работает в jvm и native, но не работает в режиме сервлета с Tomcat
+# в этом случае необходимо сформировать application.conf
+
 ktor:
   deployment:
-    port: 8081
+    port: 8080
   application:
     modules:
       - com.crowdproj.resources.app.ApplicationKt.module
+#resources:
+#  repository:
+#    test: "$DB_TYPE_TEST:psql"
+#    prod: "$DB_TYPE_PROD:psql"
+#    # prod: cassandra
+#    psql:
+#      password: "postgres"
+#      schema: "resources"
+#      url: "jdbc:postgresql://localhost:5432/resources"
+#      user: "postgres"
 
 jwt:
   secret: "secret"
-  issuer: "Crowdproj"
-  audience: "prop-users"
-  realm: "resources"
-  clientId: "crowdproj-resources-service"
+  issuer: "http://localhost:8081/auth/realms/crowdproj"
+  audience: "ad-users"
+  realm: "crowdproj-marketplace"
+  clientId: "resources-service"
+  certUrl: "http://localhost:8081/auth/realms/crowdproj/protocol/openid-connect/certs"
